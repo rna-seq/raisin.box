@@ -1,11 +1,11 @@
 * text=auto !eol
 /README.txt -text
-rnaseq/__init__.py -text
-rnaseq/box/__init__.py -text
-rnaseq/box/boxes.ini -text
-rnaseq/box/boxes.py -text
-rnaseq/box/config.py -text
-rnaseq/box/resources.ini -text
+raisin/__init__.py -text
+raisin/box/__init__.py -text
+raisin/box/boxes.ini -text
+raisin/box/boxes.py -text
+raisin/box/config.py -text
+raisin/box/resources.ini -text
 /setup.cfg -text
 /setup.py -text
 /version.txt -text
