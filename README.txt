@@ -1,4 +1,4 @@
-= rnaseq.box =
+= raisin.box =
 
 This package contains the definition of the boxes that appear on the pages rendered by
 repoze.bfg.

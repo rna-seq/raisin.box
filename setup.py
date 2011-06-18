@@ -3,7 +3,7 @@ import sys, os
 
 version = '1.0'
 
-setup(name='rnaseq.box',
+setup(name='raisin.box',
       version=version,
       description="",
       long_description="""\
@@ -15,8 +15,8 @@ setup(name='rnaseq.box',
       url='',
       license='',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-      namespace_packages = ['rnaseq'],
-      package_data = {'rnaseq.box':['*.ini']},
+      namespace_packages = ['raisin'],
+      package_data = {'raisin.box':['*.ini']},
       include_package_data=True,
       zip_safe=False,
       install_requires=[

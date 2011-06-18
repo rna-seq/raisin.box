@@ -6,7 +6,7 @@ from config import JSON
 # in order to augment the box information. 
 # It is not needed when the JSON resource can be passed through as is
 from config import PICKLED    
-from rnaseq.box import resources_registry
+from raisin.box import resources_registry
 from gvizapi import gviz_api
 
 class augment_resource(object):
