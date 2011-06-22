@@ -118,10 +118,10 @@ def project_experimentstable(self, box):
     column_number = len(box[PICKLED]['table_description'])
     js = """
    function makeExperimentLink(dataTable, rowNum){
-       return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/experiment/' + dataTable.getValue(rowNum, 1) + '/statistics/overview' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 1) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
+       return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/statistics/overview' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
    }   
    view.setColumns([{calc:makeExperimentLink, type:'string', label:'Experiment'},%s]);
-""" % str(range(2, column_number))[1:-1] 
+""" % str(range(3, column_number))[1:-1] 
     # e.g. 
     # >>> str(range(2, 4))[1:-1]
     # '2, 3'    
