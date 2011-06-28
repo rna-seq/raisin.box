@@ -118,7 +118,7 @@ def project_experimentstable(self, box):
     column_number = len(box[PICKLED]['table_description'])
     js = """
    function makeExperimentLink(dataTable, rowNum){
-       return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/statistics/overview' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
+       return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/statistics/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
    }   
    view.setColumns([{calc:makeExperimentLink, type:'string', label:'Experiment'},%s]);
 """ % str(range(3, column_number))[1:-1] 
@@ -133,7 +133,7 @@ def project_experiment_subset(self, box):
     column_number = len(box[PICKLED]['table_description'])
     js = """
    function makeExperimentLink(dataTable, rowNum){
-       return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/statistics/overview' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
+       return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/statistics/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
    }   
    view.setColumns([{calc:makeExperimentLink, type:'string', label:'Experiment'},%s]);
 """ % str(range(3, column_number))[1:-1] 
@@ -157,6 +157,10 @@ def project_downloads(self, box):
 @augment_resource((JSON,))
 def rnadashboard(self, box):
     box['title'] = ''
+    return box
+
+@augment_resource((JSON,))
+def rnadashboard_results(self, box):
     return box
 
 @augment_resource((PICKLED,))
