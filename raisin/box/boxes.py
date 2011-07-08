@@ -130,16 +130,12 @@ def project_experimentstable(self, box):
 
 @augment_resource((JSON, PICKLED,))
 def project_experiment_subset_selection(self, box):
-    column_number = len(box[PICKLED]['table_description'])
     js = """
    function makeExperimentSubsetLink(dataTable, rowNum){
        return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/experiment/subset/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 4) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
    }   
    view.setColumns([3, {calc:makeExperimentSubsetLink, type:'string', label:'Parameter Value'}, 5]);
 """
-    # e.g. 
-    # >>> str(range(2, 4))[1:-1]
-    # '2, 3'    
     box['javascript'] = js
     return box
     
