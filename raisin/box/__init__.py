@@ -13,17 +13,17 @@ BOXES: Read from the boxes.ini file
 resources_registry: A list of registered resources. For each resource it contains
 
     * the name of the resource
-    
+
     * the method to call for augmenting the box information obtained from BOXES
-    
+
     * the list of formats that the augmentation method needs
-    
+
 """
 
 import os
 from configobj import ConfigObj
 
-RESOURCES = ConfigObj(os.path.join(os.path.dirname(__file__), "resources.ini"), 
+RESOURCES = ConfigObj(os.path.join(os.path.dirname(__file__), "resources.ini"),
                       interpolation=False)
 BOXES = ConfigObj(os.path.join(os.path.dirname(__file__), "boxes.ini"))
 
