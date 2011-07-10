@@ -1,3 +1,5 @@
+"""Definition of methods augmenting resources."""
+
 import csv
 # JSON is needed for Google visualization charts
 # It is not needed for resources that are just Python dictionaries
@@ -11,13 +13,14 @@ from gvizapi import gviz_api
 
 
 class augment_resource(object):
-    """
-    This is a decorator to be used on the methods like this:
+    """This is a decorator that registers methods augmenting resources.
 
-    @augment_resource((JSON,PICKLED))
-    def project_meta(self, box):
+    Use the decorator like this:
 
-    The list of formats needed during the method are given as the formats parameter.
+        @augment_resource((JSON,PICKLED))
+        def project_meta(self, box):
+
+    The list of formats needed in the method are given as the formats parameter.
 
     * JSON is always needed when a resource is fetched from a remote server
 
@@ -29,11 +32,15 @@ class augment_resource(object):
     """
 
     def __init__(self, formats):
+        """Store the formats that need to be fetched for the method"""
         self.formats = formats
 
     def __call__(self, wrapped=None):
+        """Register the method in the resources_registry"""
         if wrapped:
-            resources_registry.append((wrapped.__name__, wrapped, self.formats, ))
+            resources_registry.append((wrapped.__name__,
+                                       wrapped,
+                                       self.formats, ))
 
 
 def get_lines(box):
@@ -41,7 +48,8 @@ def get_lines(box):
         raise AttributeError(str(box))
     if not 'table_data' in box[PICKLED]:
         raise AttributeError(str(box))
-    table = gviz_api.DataTable(box[PICKLED]['table_description'], box[PICKLED]['table_data'])
+    table = gviz_api.DataTable(box[PICKLED]['table_description'],
+                               box[PICKLED]['table_data'])
     return csv.DictReader(table.ToCsv().split('\n'),
                           delimiter=',',
                           quotechar='"',
@@ -191,33 +199,15 @@ def rnadashboard_results(self, box):
 
 @augment_resource((PICKLED,))
 def experiment_sample_info(self, box):
-    lines = get_lines(box)
-    line = {}
-    try:
-        line = lines.next()
-    except StopIteration:
-        pass
-    box['title'] = 'Sample Information'
-    box['description'] = []
-    if line:
-        if line.get('Species', ''):
-            box['description'].append({'Species': line['Species']})
-        if line.get('Cell Type', ''):
-            box['description'].append({'Cell Type': line['Cell Type']})
-        if line.get('RNA Type', ''):
-            box['description'].append({'RNA Type': line['RNA Type']})
-        if line.get('Compartment', ''):
-            box['description'].append({'Compartment': line['Compartment']})
-        if line.get('Bio Replicate', ''):
-            box['description'].append({'Bio Replicate': line['Bio Replicate']})
-        if line.get('Date', ''):
-            box['description'].append({'Date': line['Date']})
-    box['description_type'] = 'properties'
-    return box
+    return _sample_info(self, box)
 
 
 @augment_resource((PICKLED,))
 def run_sample_info(self, box):
+    return _sample_info(self, box)
+
+
+def _sample_info(self, box):
     lines = get_lines(box)
     line = {}
     try:
@@ -245,70 +235,20 @@ def run_sample_info(self, box):
 
 @augment_resource((PICKLED,))
 def experiment_mapping_info(self, box):
-    lines = get_lines(box)
-    line = {}
-    try:
-        line = lines.next()
-    except StopIteration:
-        pass
-    box['title'] = 'Mapping Information'
-    box['description'] = []
-    if line:
-        if line.get('Read Length', ''):
-            box['description'].append({'Read Length': line['Read Length']})
-        if line.get('Mismatches', ''):
-            box['description'].append({'Mismatches': line['Mismatches']})
-        if line.get('Annotation Version', ''):
-            box['description'].append({'Annotation Version': line['Annotation Version']})
-        if line.get('Annotation Source', ''):
-            box['description'].append({'Annotation Source': line['Annotation Source']})
-        if line.get('Genome Assembly', ''):
-            box['description'].append({'Genome Assembly': line['Genome Assembly']})
-        if line.get('Genome Source', ''):
-            box['description'].append({'Genome Source': line['Genome Source']})
-        if line.get('Genome Gender', ''):
-            box['description'].append({'Genome Gender': line['Genome Gender']})
-        if line.get('UCSC Custom Track', '') != "":
-            link = """<a target="_blank" href="%s">Display as a custom track at UCSC</a>"""
-            box['description'].append({'Visualization': link % (line['UCSC Custom Track'])})
-    box['description_type'] = 'properties'
-    return box
+    return _mapping_info(self, box)
 
 
 @augment_resource((PICKLED,))
 def run_mapping_info(self, box):
-    lines = get_lines(box)
-    line = {}
-    try:
-        line = lines.next()
-    except StopIteration:
-        pass
-    box['title'] = 'Mapping Information'
-    box['description'] = []
-    if line:
-        if line['Read Length']:
-            box['description'].append({'Read Length': line['Read Length']})
-        if line['Mismatches']:
-            box['description'].append({'Mismatches': line['Mismatches']})
-        if line['Annotation Version']:
-            box['description'].append({'Annotation Version': line['Annotation Version']})
-        if line['Annotation Source']:
-            box['description'].append({'Annotation Source': line['Annotation Source']})
-        if line['Genome Assembly']:
-            box['description'].append({'Genome Assembly': line['Genome Assembly']})
-        if line['Genome Source']:
-            box['description'].append({'Genome Source': line['Genome Source']})
-        if line['Genome Gender']:
-            box['description'].append({'Genome Gender': line['Genome Gender']})
-        if line['UCSC Custom Track'] != "":
-            link = """<a target="_blank" href="%s">Display as a custom track at UCSC</a>"""
-            box['description'].append({'Visualization': link % (line['UCSC Custom Track'])})
-    box['description_type'] = 'properties'
-    return box
+    return _mapping_info(self, box)
 
 
 @augment_resource((PICKLED,))
 def lane_mapping_info(self, box):
+    return _mapping_info(self, box)
+
+
+def _mapping_info(self, box):
     lines = get_lines(box)
     line = {}
     try:
@@ -318,23 +258,26 @@ def lane_mapping_info(self, box):
     box['title'] = 'Mapping Information'
     box['description'] = []
     if line:
-        if line['Read Length']:
-            box['description'].append({'Read Length': line['Read Length']})
-        if line['Mismatches']:
-            box['description'].append({'Mismatches': line['Mismatches']})
-        if line['Annotation Version']:
-            box['description'].append({'Annotation Version': line['Annotation Version']})
-        if line['Annotation Source']:
-            box['description'].append({'Annotation Source': line['Annotation Source']})
-        if line['Genome Assembly']:
-            box['description'].append({'Genome Assembly': line['Genome Assembly']})
-        if line['Genome Source']:
-            box['description'].append({'Genome Source': line['Genome Source']})
-        if line['Genome Gender']:
-            box['description'].append({'Genome Gender': line['Genome Gender']})
-        if line['UCSC Custom Track'] != "":
-            link = """<a target="_blank" href="%s">Display as a custom track at UCSC</a>"""
-            box['description'].append({'Visualization': link % (line['UCSC Custom Track'])})
+        add = box['description'].append
+        if line.get('Read Length', ''):
+            add({'Read Length': line['Read Length']})
+        if line.get('Mismatches', ''):
+            add({'Mismatches': line['Mismatches']})
+        if line.get('Annotation Version', ''):
+            add({'Annotation Version': line['Annotation Version']})
+        if line.get('Annotation Source', ''):
+            add({'Annotation Source': line['Annotation Source']})
+        if line.get('Genome Assembly', ''):
+            add({'Genome Assembly': line['Genome Assembly']})
+        if line.get('Genome Source', ''):
+            add({'Genome Source': line['Genome Source']})
+        if line.get('Genome Gender', ''):
+            add({'Genome Gender': line['Genome Gender']})
+        if line.get('UCSC Custom Track', '') != "":
+            link = """<a target="_blank" href="%(href)s">%(content)s</a>"""
+            parts = {'href': line['UCSC Custom Track'],
+                     'content': "Display as a custom track at UCSC"}
+            add({'Visualization': link % parts})
     box['description_type'] = 'properties'
     return box
 
@@ -401,68 +344,32 @@ def lane_splicing_summary(self, box):
 
 @augment_resource((JSON, PICKLED))
 def experiment_reads_containing_ambiguous_nucleotides(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"60%"}'''
-    box['chartoptions']['chartArea'] = chartArea
-    box['chartoptions']['hAxis'] = '''{minValue:"0"}'''
+    return _custom_spaced_chart(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_reads_containing_ambiguous_nucleotides(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"60%"}'''
-    box['chartoptions']['chartArea'] = chartArea
-    box['chartoptions']['hAxis'] = '''{minValue:"0"}'''
+    return _custom_spaced_chart(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def experiment_reads_containing_only_unambiguous_nucleotides(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"60%"}'''
-    box['chartoptions']['chartArea'] = chartArea
-    box['chartoptions']['hAxis'] = '''{minValue:"0"}'''
+    return _custom_spaced_chart(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_reads_containing_only_unambiguous_nucleotides(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"60%"}'''
-    box['chartoptions']['chartArea'] = chartArea
-    box['chartoptions']['hAxis'] = '''{minValue:"0"}'''
+    return _custom_spaced_chart(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def experiment_average_percentage_of_unique_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"60%"}'''
-    box['chartoptions']['chartArea'] = chartArea
-    box['chartoptions']['hAxis'] = '''{minValue:"0"}'''
+    return _custom_spaced_chart(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_average_percentage_of_unique_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"60%"}'''
-    box['chartoptions']['chartArea'] = chartArea
-    box['chartoptions']['hAxis'] = '''{minValue:"0"}'''
+    return _custom_spaced_chart(self, box)
 
 
 @augment_resource((JSON,))
@@ -497,272 +404,137 @@ def lane_average_and_average_unique_reads(self, box):
 
 @augment_resource((JSON, PICKLED))
 def experiment_percentage_of_reads_with_ambiguous_bases(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 30, 160)
-    box['chartoptions']['height'] = str(height)
+    return _percentage_of_reads_with_ambiguous_bases(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_percentage_of_reads_with_ambiguous_bases(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 60, 160)
-    box['chartoptions']['height'] = str(height)
+    return _percentage_of_reads_with_ambiguous_bases(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def lane_percentage_of_reads_with_ambiguous_bases(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 60, 160)
-    box['chartoptions']['height'] = str(height)
+    return _percentage_of_reads_with_ambiguous_bases(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def experiment_quality_score_by_position(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
+    return _position(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_quality_score_by_position(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
+    return _position(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def lane_quality_score_by_position(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
+    return _position(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def experiment_ambiguous_bases_per_position(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
+    return _position(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_ambiguous_bases_per_position(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
+    return _position(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def lane_ambiguous_bases_per_position(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
+    return _position(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def experiment_merged_mapped_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'''
-    box['chartoptions']['chartArea'] = chartArea
+    return _mapped_reads(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_merged_mapped_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'''
-    box['chartoptions']['chartArea'] = chartArea
+    return _mapped_reads(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def lane_merged_mapped_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'''
-    box['chartoptions']['chartArea'] = chartArea
+    return _mapped_reads(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def experiment_genome_mapped_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'''
-    box['chartoptions']['chartArea'] = chartArea
+    return _mapped_reads(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_genome_mapped_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'''
-    box['chartoptions']['chartArea'] = chartArea
+    return _mapped_reads(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def lane_genome_mapped_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'''
-    box['chartoptions']['chartArea'] = chartArea
+    return _mapped_reads(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def experiment_junction_mapped_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'''
-    box['chartoptions']['chartArea'] = chartArea
+    return _mapped_reads(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_junction_mapped_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'''
-    box['chartoptions']['chartArea'] = chartArea
+    return _mapped_reads(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def lane_junction_mapped_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'''
-    box['chartoptions']['chartArea'] = chartArea
+    return _mapped_reads(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def experiment_split_mapped_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'''
-    box['chartoptions']['chartArea'] = chartArea
+    return _mapped_reads(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_split_mapped_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'''
-    box['chartoptions']['chartArea'] = chartArea
+    return _mapped_reads(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def lane_split_mapped_reads(self, box):
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'''
-    box['chartoptions']['chartArea'] = chartArea
+    return _mapped_reads(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def experiment_detected_genes(self, box):
-    box['javascript'] = ""
-    # Need to extract some infos from the table, so load the pickled Python code
-    table = box[PICKLED]
-    # Add formatting for expression values of lanes
-    for i in range(1, len(table['table_description'])):
-        box['javascript'] = box['javascript'] + """thousandsformatter.format(data, %s);\n""" % i
-    return box
+    return _detected_genes(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_detected_genes(self, box):
-    box['javascript'] = ""
-    # Need to extract some infos from the table, so load the pickled Python code
-    table = box[PICKLED]
-    # Add formatting for expression values of lanes
-    for i in range(1, len(table['table_description'])):
-        box['javascript'] = box['javascript'] + """thousandsformatter.format(data, %s);\n""" % i
-    return box
+    return _detected_genes(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def lane_detected_genes(self, box):
-    box['javascript'] = ""
-    # Need to extract some infos from the table, so load the pickled Python code
-    table = box[PICKLED]
-    # Add formatting for expression values of lanes
-    for i in range(1, len(table['table_description'])):
-        box['javascript'] = box['javascript'] + """thousandsformatter.format(data, %s);\n""" % i
-    return box
+    return _detected_genes(self, box)
 
 
 @augment_resource((JSON,))
 def experiment_gene_expression_profile(self, box):
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
-    hAxis = '''{logScale:true}'''
-    box['chartoptions']['hAxis'] = hAxis
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
-    chartArea = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
-    box['chartoptions']['chartArea'] = chartArea
-    return box
+    return _gene_expression_profile(self, box)
 
 
 @augment_resource((JSON,))
 def run_gene_expression_profile(self, box):
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
-    hAxis = '''{logScale:true}'''
-    box['chartoptions']['hAxis'] = hAxis
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
-    chartArea = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
-    box['chartoptions']['chartArea'] = chartArea
-    return box
+    return _gene_expression_profile(self, box)
 
 
 @augment_resource((JSON,))
 def lane_gene_expression_profile(self, box):
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
-    hAxis = '''{logScale:true}'''
-    box['chartoptions']['hAxis'] = hAxis
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
-    chartArea = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
-    box['chartoptions']['chartArea'] = chartArea
-    return box
+    return _gene_expression_profile(self, box)
 
 
 @augment_resource((JSON,))
@@ -782,125 +554,62 @@ def lane_gene_expression_levels(self, box):
 
 @augment_resource((JSON, PICKLED))
 def experiment_top_genes(self, box):
-    # Need to extract some infos from the table, so load the pickled Python code
-    table = box[PICKLED]
-    # Add formatting for expression values of lanes
-    for i in range(6, len(table['table_description'])):
-        box['javascript'] = box['javascript'] + """thousandsformatter.format(data, %s);\n""" % i
-    return box
+    return _thousands_formatter(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_top_genes(self, box):
-    # Need to extract some infos from the table, so load the pickled Python code
-    table = box[PICKLED]
-    # Add formatting for expression values of lanes
-    for i in range(6, len(table['table_description'])):
-        box['javascript'] = box['javascript'] + """thousandsformatter.format(data, %s);\n""" % i
-    return box
+    return _thousands_formatter(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def lane_top_genes(self, box):
-    # Need to extract some infos from the table, so load the pickled Python code
-    table = box[PICKLED]
-    # Add formatting for expression values of lanes
-    for i in range(6, len(table['table_description'])):
-        box['javascript'] = box['javascript'] + """thousandsformatter.format(data, %s);\n""" % i
-    return box
+    return _thousands_formatter(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def experiment_top_transcripts(self, box):
-    # Need to extract some infos from the table, so load the pickled Python code
-    table = box[PICKLED]
-    # Add formatting for expression values of lanes
-    for i in range(5, len(table['table_description'])):
-        box['javascript'] = box['javascript'] + """thousandsformatter.format(data, %s);\n""" % i
-    return box
+    return _thousands_formatter(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_top_transcripts(self, box):
-    # Need to extract some infos from the table, so load the pickled Python code
-    table = box[PICKLED]
-    # Add formatting for expression values of lanes
-    for i in range(5, len(table['table_description'])):
-        box['javascript'] = box['javascript'] + """thousandsformatter.format(data, %s);\n""" % i
-    return box
+    return _thousands_formatter(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def lane_top_transcripts(self, box):
-    # Need to extract some infos from the table, so load the pickled Python code
-    table = box[PICKLED]
-    # Add formatting for expression values of lanes
-    for i in range(5, len(table['table_description'])):
-        box['javascript'] = box['javascript'] + """thousandsformatter.format(data, %s);\n""" % i
-    return box
+    return _thousands_formatter(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def experiment_top_exons(self, box):
-    # Need to extract some infos from the table, so load the pickled Python code
-    table = box[PICKLED]
-    # Add formatting for expression values of lanes
-    for i in range(4, len(table['table_description'])):
-        box['javascript'] = box.get('javascript', '') + """thousandsformatter.format(data, %s);\n""" % i
-    return box
+    return _thousands_formatter(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def run_top_exons(self, box):
-    # Need to extract some infos from the table, so load the pickled Python code
-    table = box[PICKLED]
-    # Add formatting for expression values of lanes
-    for i in range(4, len(table['table_description'])):
-        box['javascript'] = box.get('javascript', '') + """thousandsformatter.format(data, %s);\n""" % i
-    return box
+    return _thousands_formatter(self, box)
 
 
 @augment_resource((JSON, PICKLED))
 def lane_top_exons(self, box):
-    # Need to extract some infos from the table, so load the pickled Python code
-    table = box[PICKLED]
-    # Add formatting for expression values of lanes
-    for i in range(4, len(table['table_description'])):
-        box['javascript'] = box.get('javascript', '') + """thousandsformatter.format(data, %s);\n""" % i
-    return box
+    return _thousands_formatter(self, box)
 
 
 @augment_resource((JSON,))
 def experiment_exon_inclusion_profile(self, box):
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
-    chartArea = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
-    box['chartoptions']['chartArea'] = chartArea
-    return box
+    return _exon_inclusion_profile(self, box)
 
 
 @augment_resource((JSON,))
 def run_exon_inclusion_profile(self, box):
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
-    chartArea = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
-    box['chartoptions']['chartArea'] = chartArea
-    return box
+    return _exon_inclusion_profile(self, box)
 
 
 @augment_resource((JSON,))
 def lane_exon_inclusion_profile(self, box):
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
-    chartArea = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
-    box['chartoptions']['chartArea'] = chartArea
-    return box
+    return _exon_inclusion_profile(self, box)
 
 
 @augment_resource((JSON,))
@@ -946,3 +655,80 @@ def run_novel_junctions_from_unannotated_exons(self, box):
 @augment_resource((JSON,))
 def lane_novel_junctions_from_unannotated_exons(self, box):
     pass
+
+
+def _exon_inclusion_profile(self, box):
+    vAxis = '''{logScale:true}'''
+    box['chartoptions']['vAxis'] = vAxis
+    box['chartoptions']['width'] = 900
+    box['chartoptions']['height'] = 640
+    chartArea = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
+    box['chartoptions']['chartArea'] = chartArea
+    return box
+
+
+def _gene_expression_profile(self, box):
+    vAxis = '''{logScale:true}'''
+    box['chartoptions']['vAxis'] = vAxis
+    hAxis = '''{logScale:true}'''
+    box['chartoptions']['hAxis'] = hAxis
+    box['chartoptions']['width'] = 900
+    box['chartoptions']['height'] = 640
+    chartArea = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
+    box['chartoptions']['chartArea'] = chartArea
+    return box
+
+
+def _custom_spaced_chart(self, box):
+    # Need to extract some infos from the table, so load the pickled dictionary
+    table = box[PICKLED]
+    height = max(len(table['table_data']) * 40, 100)
+    box['chartoptions']['height'] = str(height)
+    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"60%"}'''
+    box['chartoptions']['chartArea'] = chartArea
+    box['chartoptions']['hAxis'] = '''{minValue:"0"}'''
+
+
+def _thousands_formatter(self, box):
+    # Need to extract some infos from the table, so load the pickled Python code
+    table = box[PICKLED]
+    i = 0
+    for column, column_type in table['table_description']:
+        if column_type == 'number':
+            box['javascript'] += """thousandsformatter.format(data, %s);\n""" % i
+        i = i + 1
+    return box
+
+
+def _detected_genes(self, box):
+    box['javascript'] = ""
+    # Need to extract some infos from the table, so load the pickled Python code
+    table = box[PICKLED]
+    # Add formatting for expression values of lanes
+    for i in range(1, len(table['table_description'])):
+        box['javascript'] = box['javascript'] + """thousandsformatter.format(data, %s);\n""" % i
+    return box
+
+
+def _mapped_reads(self, box):
+    # Need to extract some infos from the table, so load the pickled dictionary
+    table = box[PICKLED]
+    height = max(len(table['table_data']) * 40, 100)
+    box['chartoptions']['height'] = str(height)
+    chartArea = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'''
+    box['chartoptions']['chartArea'] = chartArea
+
+
+def _percentage_of_reads_with_ambiguous_bases(self, box):
+    # Need to extract some infos from the table, so load the pickled dictionary
+    table = box[PICKLED]
+    height = max(len(table['table_data']) * 60, 160)
+    box['chartoptions']['height'] = str(height)
+
+
+def _position(self, box):
+    # Need to extract some infos from the table, so load the pickled dictionary
+    vAxis = '''{logScale:true}'''
+    box['chartoptions']['vAxis'] = vAxis
+    box['chartoptions']['width'] = 900
+    box['chartoptions']['height'] = 640
