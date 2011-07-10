@@ -522,7 +522,6 @@ def lane_percentage_of_reads_with_ambiguous_bases(self, box):
 @augment_resource((JSON, PICKLED))
 def experiment_quality_score_by_position(self, box):
     # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
     vAxis = '''{logScale:true}'''
     box['chartoptions']['vAxis'] = vAxis
     box['chartoptions']['width'] = 900
@@ -532,7 +531,6 @@ def experiment_quality_score_by_position(self, box):
 @augment_resource((JSON, PICKLED))
 def run_quality_score_by_position(self, box):
     # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
     vAxis = '''{logScale:true}'''
     box['chartoptions']['vAxis'] = vAxis
     box['chartoptions']['width'] = 900
@@ -542,7 +540,6 @@ def run_quality_score_by_position(self, box):
 @augment_resource((JSON, PICKLED))
 def lane_quality_score_by_position(self, box):
     # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
     vAxis = '''{logScale:true}'''
     box['chartoptions']['vAxis'] = vAxis
     box['chartoptions']['width'] = 900
@@ -552,7 +549,6 @@ def lane_quality_score_by_position(self, box):
 @augment_resource((JSON, PICKLED))
 def experiment_ambiguous_bases_per_position(self, box):
     # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
     vAxis = '''{logScale:true}'''
     box['chartoptions']['vAxis'] = vAxis
     box['chartoptions']['width'] = 900
@@ -562,7 +558,6 @@ def experiment_ambiguous_bases_per_position(self, box):
 @augment_resource((JSON, PICKLED))
 def run_ambiguous_bases_per_position(self, box):
     # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
     vAxis = '''{logScale:true}'''
     box['chartoptions']['vAxis'] = vAxis
     box['chartoptions']['width'] = 900
@@ -572,7 +567,6 @@ def run_ambiguous_bases_per_position(self, box):
 @augment_resource((JSON, PICKLED))
 def lane_ambiguous_bases_per_position(self, box):
     # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
     vAxis = '''{logScale:true}'''
     box['chartoptions']['vAxis'] = vAxis
     box['chartoptions']['width'] = 900
