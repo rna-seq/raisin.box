@@ -18,6 +18,17 @@ resources_registry: A list of registered resources. For each resource it contain
 
     * the list of formats that the augmentation method needs
 
+boxes: contains methods augmenting the information in BOXES. 
+
+    * Used for injection of Javascript
+    
+    * Changing the chart options 
+    
+        * adapting the width and height of a chart
+        
+        * add log scales
+    
+    * Rendering the title and description of the boxes
 """
 
 import os
