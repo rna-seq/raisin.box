@@ -31,16 +31,16 @@ class augment(object):
     box['description'] = [{'Species': box[PICKLED]['species']}]
     """
 
-    def __init__(context, formats):
+    def __init__(self, formats):
         """Store the formats that need to be fetched for the method"""
-        context.formats = formats
+        self.formats = formats
 
-    def __call__(context, wrapped=None):
+    def __call__(self, wrapped=None):
         """Register the method in the RESOURCES_REGISTRY"""
         if wrapped:
             RESOURCES_REGISTRY.append((wrapped.__name__,
                                        wrapped,
-                                       context.formats, ))
+                                       self.formats, ))
 
 
 def get_lines(box):
