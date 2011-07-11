@@ -49,11 +49,11 @@ def get_lines(box):
         raise AttributeError(str(box))
     if not 'table_data' in box[PICKLED]:
         raise AttributeError(str(box))
-    table = gviz_api.DataTable(box[PICKLED]['table_description'], 
+    table = gviz_api.DataTable(box[PICKLED]['table_description'],
                                box[PICKLED]['table_data'])
-    reader = csv.DictReader(table.ToCsv().split('\n'), 
+    reader = csv.DictReader(table.ToCsv().split('\n'),
                             delimiter=',',
-                            quotechar='"', 
+                            quotechar='"',
                             skipinitialspace=True)
     try:
         lines = reader.next()
@@ -121,7 +121,7 @@ def project_experimentstable(context, box):
     column_number = len(box[PICKLED]['table_description'])
     js = """
    function makeExperimentLink(dataTable, rowNum){
-       return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/statistics/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
+       return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/tab/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
    }
    view.setColumns([{calc:makeExperimentLink, type:'string', label:'Experiment'},%s]);
 """ % str(range(3, column_number))[1:-1]
@@ -149,7 +149,7 @@ def project_experiment_subset(context, box):
     column_number = len(box[PICKLED]['table_description'])
     js = """
    function makeExperimentLink(dataTable, rowNum){
-       return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/statistics/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
+       return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/tab/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
    }
    view.setColumns([{calc:makeExperimentLink, type:'string', label:'Experiment'},%s]);
 """ % str(range(3, column_number))[1:-1]
