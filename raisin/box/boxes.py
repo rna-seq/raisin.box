@@ -44,16 +44,18 @@ class augment(object):
 
 
 def get_lines(box):
+    """Get the lines out of a data table."""
     if not 'table_description' in box[PICKLED]:
         raise AttributeError(str(box))
     if not 'table_data' in box[PICKLED]:
         raise AttributeError(str(box))
-    table = gviz_api.DataTable(box[PICKLED]['table_description'],
-                               box[PICKLED]['table_data'])
-    return csv.DictReader(table.ToCsv().split('\n'),
-                          delimiter=',',
-                          quotechar='"',
-                          skipinitialspace=True)
+    table = gviz_api.DataTable(box[PICKLED]['table_description'], box[PICKLED]['table_data'])
+    lines = csv.DictReader(table.ToCsv().split('\n'), delimiter=',', quotechar='"', skipinitialspace=True)
+    try:
+        lines = lines.next()
+    except StopIteration:
+        pass
+    return lines
 
 
 @augment((PICKLED,))
@@ -68,13 +70,8 @@ def projects(self, box):
 @augment((PICKLED,))
 def project_about(self, box):
     lines = get_lines(box)
-    line = {}
-    try:
-        line = lines.next()
-    except StopIteration:
-        pass
     box['title'] = 'About'
-    box['description'] = line.get('Project Description', '')
+    box['description'] = lines.get('Project Description', '')
     box['description_type'] = 'infotext'
     return box
 
@@ -82,13 +79,8 @@ def project_about(self, box):
 @augment((PICKLED,))
 def run_about(self, box):
     lines = get_lines(box)
-    line = {}
-    try:
-        line = lines.next()
-    except StopIteration:
-        pass
     box['title'] = 'About'
-    box['description'] = line.get('Project Description', '')
+    box['description'] = lines.get('Project Description', '')
     box['description_type'] = 'infotext'
     return box
 
@@ -96,13 +88,8 @@ def run_about(self, box):
 @augment((PICKLED,))
 def project_meta(self, box):
     lines = get_lines(box)
-    line = {}
-    try:
-        line = lines.next()
-    except StopIteration:
-        pass
     box['title'] = ''
-    box['description'] = [{'Species': line.get('Species', '')}]
+    box['description'] = [{'Species': lines.get('Species', '')}]
     box['description_type'] = 'properties'
     return box
 
@@ -111,12 +98,7 @@ def project_meta(self, box):
 def experiment_about(self, box):
     box['title'] = 'About'
     lines = get_lines(box)
-    line = {}
-    try:
-        line = lines.next()
-    except StopIteration:
-        pass
-    box['description'] = line.get('Description', '')
+    box['description'] = lines.get('Description', '')
     box['description_type'] = 'infotext'
     return box
 
@@ -209,26 +191,21 @@ def run_sample_info(self, box):
 
 def _sample_info(self, box):
     lines = get_lines(box)
-    line = {}
-    try:
-        line = lines.next()
-    except StopIteration:
-        pass
     box['title'] = 'Sample Information'
     box['description'] = []
-    if line:
-        if line['Species']:
-            box['description'].append({'Species': line['Species']})
-        if line['Cell Type']:
-            box['description'].append({'Cell Type': line['Cell Type']})
-        if line['RNA Type']:
-            box['description'].append({'RNA Type': line['RNA Type']})
-        if line['Compartment']:
-            box['description'].append({'Compartment': line['Compartment']})
-        if line['Bio Replicate']:
-            box['description'].append({'Bio Replicate': line['Bio Replicate']})
-        if line['Date']:
-            box['description'].append({'Date': line['Date']})
+    if lines:
+        if lines['Species']:
+            box['description'].append({'Species': lines['Species']})
+        if lines['Cell Type']:
+            box['description'].append({'Cell Type': lines['Cell Type']})
+        if lines['RNA Type']:
+            box['description'].append({'RNA Type': lines['RNA Type']})
+        if lines['Compartment']:
+            box['description'].append({'Compartment': lines['Compartment']})
+        if lines['Bio Replicate']:
+            box['description'].append({'Bio Replicate': lines['Bio Replicate']})
+        if lines['Date']:
+            box['description'].append({'Date': lines['Date']})
     box['description_type'] = 'properties'
     return box
 
@@ -250,32 +227,27 @@ def lane_mapping_info(self, box):
 
 def _mapping_info(self, box):
     lines = get_lines(box)
-    line = {}
-    try:
-        line = lines.next()
-    except StopIteration:
-        pass
     box['title'] = 'Mapping Information'
     box['description'] = []
-    if line:
+    if lines:
         add = box['description'].append
-        if line.get('Read Length', ''):
-            add({'Read Length': line['Read Length']})
-        if line.get('Mismatches', ''):
-            add({'Mismatches': line['Mismatches']})
-        if line.get('Annotation Version', ''):
-            add({'Annotation Version': line['Annotation Version']})
-        if line.get('Annotation Source', ''):
-            add({'Annotation Source': line['Annotation Source']})
-        if line.get('Genome Assembly', ''):
-            add({'Genome Assembly': line['Genome Assembly']})
-        if line.get('Genome Source', ''):
-            add({'Genome Source': line['Genome Source']})
-        if line.get('Genome Gender', ''):
-            add({'Genome Gender': line['Genome Gender']})
-        if line.get('UCSC Custom Track', '') != "":
+        if lines.get('Read Length', ''):
+            add({'Read Length': lines['Read Length']})
+        if lines.get('Mismatches', ''):
+            add({'Mismatches': lines['Mismatches']})
+        if lines.get('Annotation Version', ''):
+            add({'Annotation Version': lines['Annotation Version']})
+        if lines.get('Annotation Source', ''):
+            add({'Annotation Source': lines['Annotation Source']})
+        if lines.get('Genome Assembly', ''):
+            add({'Genome Assembly': lines['Genome Assembly']})
+        if lines.get('Genome Source', ''):
+            add({'Genome Source': lines['Genome Source']})
+        if lines.get('Genome Gender', ''):
+            add({'Genome Gender': lines['Genome Gender']})
+        if lines.get('UCSC Custom Track', '') != "":
             link = """<a target="_blank" href="%(href)s">%(content)s</a>"""
-            parts = {'href': line['UCSC Custom Track'],
+            parts = {'href': lines['UCSC Custom Track'],
                      'content': "Display as a custom track at UCSC"}
             add({'Visualization': link % parts})
     box['description_type'] = 'properties'
