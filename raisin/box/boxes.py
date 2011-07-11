@@ -8,7 +8,7 @@ from config import JSON
 # in order to augment the box information.
 # It is not needed when the JSON resource can be passed through as is
 from config import PICKLED
-from raisin.box import resources_registry
+from raisin.box import RESOURCES_REGISTRY
 from gvizapi import gviz_api
 
 
@@ -36,9 +36,9 @@ class augment_resource(object):
         self.formats = formats
 
     def __call__(self, wrapped=None):
-        """Register the method in the resources_registry"""
+        """Register the method in the RESOURCES_REGISTRY"""
         if wrapped:
-            resources_registry.append((wrapped.__name__,
+            RESOURCES_REGISTRY.append((wrapped.__name__,
                                        wrapped,
                                        self.formats, ))
 
