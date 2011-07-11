@@ -6,15 +6,15 @@ RESOURCES: Read from the resources.ini file
 
 BOXES: Read from the boxes.ini file
 
-    * Used by raisin.restyler to verify that a box id passed in a url really exists
+    * Used by raisin.restyler to verify that a box id passed in a url exists
 
     * Used by raisin.restyler to get meta information about the boxes
 
-resources_registry: A list of registered resources. For each resource it contains
+RESOURCES_REGISTRY: A list of registered resources. For each resource contains
 
     * the name of the resource
 
-    * the method to call for augmenting the box information obtained from BOXES
+    * the method to call for augmenting the box information in BOXES
 
     * the list of formats that the augmentation method needs
 
@@ -39,6 +39,6 @@ RESOURCES = ConfigObj(os.path.join(os.path.dirname(__file__), "resources.ini"),
 BOXES = ConfigObj(os.path.join(os.path.dirname(__file__), "boxes.ini"))
 
 # All boxes are registered here
-resources_registry = []
+RESOURCES_REGISTRY = []
 
 import boxes
