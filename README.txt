@@ -16,7 +16,7 @@ All boxes have a method for augmenting their configuration dynamically in
 
 An example of augmenting just the basics, like the title, description and description type:
 
-    @augment_resource((PICKLED,))
+    @augment((PICKLED,))
     def project_about(self, box):
         box['title'] = 'About'
         box['description'] = box[PICKLED]['description']       
@@ -25,20 +25,20 @@ An example of augmenting just the basics, like the title, description and descri
 
 An example of correcting the height of a chart depending on the length of the table data:
 
-    @augment_resource((JSON, PICKLED))
+    @augment((JSON, PICKLED))
     def read_quality(self, box):
         # Need to extract some infos from the table, so load the pickled dictionary
         table = box[PICKLED]
         height = max(len(table['table_data']) * 60, 160)
         box['chartoptions']['height'] = str(height)
 
-= The augment_resource decorator =
+= The augment decorator =
 
-The augment_resource decorator defines what resource representations should be fetched.
+The augment decorator defines what resource representations should be fetched.
 
 * JSON
 
-    * Neede for charts that rely on Google visualization tools
+    * Needed for charts that rely on Google visualization tools
 
 * PICKLED
 
