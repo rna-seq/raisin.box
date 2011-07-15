@@ -121,7 +121,12 @@ def project_experimentstable(context, box):
     column_number = len(box[PICKLED]['table_description'])
     js = """
    function makeExperimentLink(dataTable, rowNum){
-       return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/tab/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
+       if (dataTable.getValue(rowNum, 0) != undefined) {
+           return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/tab/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
+       }
+       else {
+           return '';
+       };
    }
    view.setColumns([{calc:makeExperimentLink, type:'string', label:'Experiment'},%s]);
 """ % str(range(3, column_number))[1:-1]
@@ -136,7 +141,12 @@ def project_experimentstable(context, box):
 def project_experiment_subset_selection(context, box):
     js = """
    function makeExperimentSubsetLink(dataTable, rowNum){
-       return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/experiment/subset/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 4) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
+       if (dataTable.getValue(rowNum, 0) != undefined) {
+           return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/experiment/subset/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 4) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
+       }
+       else {
+           return '';
+       };
    }
    view.setColumns([3, {calc:makeExperimentSubsetLink, type:'string', label:'Parameter Value'}, 5]);
 """
@@ -149,7 +159,12 @@ def project_experiment_subset(context, box):
     column_number = len(box[PICKLED]['table_description'])
     js = """
    function makeExperimentLink(dataTable, rowNum){
-       return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/tab/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
+       if (dataTable.getValue(rowNum, 0) != undefined) {
+           return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/tab/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
+       }
+       else {
+           return '';
+       };
    }
    view.setColumns([{calc:makeExperimentLink, type:'string', label:'Experiment'},%s]);
 """ % str(range(3, column_number))[1:-1]
@@ -164,7 +179,12 @@ def project_experiment_subset(context, box):
 def project_downloads(context, box):
     js = """
    function makeDownloadLink(dataTable, rowNum){
-       return String.fromCharCode('60') + 'a href=\"' + dataTable.getValue(rowNum, 3) + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 0) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
+       if (dataTable.getValue(rowNum, 0) != undefined) {
+           return String.fromCharCode('60') + 'a href=\"' + dataTable.getValue(rowNum, 3) + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 0) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
+       }
+       else {
+           return '';
+       };
    }
    view.setColumns([1,2,{calc:makeDownloadLink, type:'string', label:'.csv File Download Link'}]);
     """
