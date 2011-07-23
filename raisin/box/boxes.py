@@ -685,11 +685,12 @@ def _custom_spaced_chart(context, box):
 
 
 def _thousands_formatter(context, box):
+    javascript = "thousandsformatter.format(data, %s);\n"
     table = box[PICKLED]
     i = 0
     for column, column_type in table['table_description']:
         if column_type == 'number':
-            box['javascript'] += "thousandsformatter.format(data, %s);\n" % i
+            box['javascript'] += javascript % i
         i = i + 1
     return box
 
