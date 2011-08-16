@@ -45,6 +45,8 @@ class augment(object):
 
 def get_lines(box):
     """Get the lines out of a data table."""
+    if not box[PICKLED]:
+        return {}
     if not 'table_description' in box[PICKLED]:
         raise AttributeError(str(box))
     if not 'table_data' in box[PICKLED]:
@@ -118,6 +120,8 @@ def experiments(context, box):
 
 @augment((JSON, PICKLED))
 def project_experimentstable(context, box):
+    if not box[PICKLED]:
+        return
     column_number = len(box[PICKLED]['table_description'])
     js = """
    function makeExperimentLink(dataTable, rowNum){
