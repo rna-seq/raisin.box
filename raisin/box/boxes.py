@@ -142,6 +142,10 @@ def project_experimentstable(context, box):
 
 
 @augment((JSON, PICKLED,))
+def project_experiment_subset_start(context, box):
+    return box
+
+@augment((JSON, PICKLED,))
 def project_experiment_subset_selection(context, box):
     js = """
    function makeExperimentSubsetLink(dataTable, rowNum){
@@ -176,6 +180,11 @@ def project_experiment_subset(context, box):
     # >>> str(range(2, 4))[1:-1]
     # '2, 3'
     box['javascript'] = js
+    return box
+
+
+@augment((JSON, PICKLED,))
+def project_experiment_subset_pending(context, box):
     return box
 
 
