@@ -13,7 +13,7 @@ from gvizapi import gviz_api
 
 
 class augment(object):
-    """This is a decorator that registers methods augmenting resources.
+   ."""This is a decorator that registers methods augmenting resources.
 
     Use the decorator like this:
 
@@ -29,14 +29,14 @@ class augment(object):
     This is how to use the information from the pickled information:
 
     box['description'] = [{'Species': box[PICKLED]['species']}]
-    """
+   ."""
 
     def __init__(self, formats):
-        """Store the formats that need to be fetched for the method"""
+       ."""Store the formats that need to be fetched for the method"""
         self.formats = formats
 
     def __call__(self, wrapped=None):
-        """Register the method in the RESOURCES_REGISTRY"""
+       ."""Register the method in the RESOURCES_REGISTRY"""
         if wrapped:
             RESOURCES_REGISTRY.append((wrapped.__name__,
                                        wrapped,
@@ -44,7 +44,7 @@ class augment(object):
 
 
 def get_lines(box):
-    """Get the lines out of a data table."""
+   ."""Get the lines out of a data table."""
     if not box[PICKLED]:
         return {}
     if not 'table_description' in box[PICKLED]:
@@ -66,6 +66,7 @@ def get_lines(box):
 
 @augment((PICKLED,))
 def projects(context, box):
+   ."""Augment resource."""
     lines = get_lines(box)
     box['title'] = ''
     box['description'] = lines
@@ -75,6 +76,7 @@ def projects(context, box):
 
 @augment((PICKLED,))
 def project_about(context, box):
+   ."""Augment resource."""
     lines = get_lines(box)
     box['title'] = 'About'
     box['description'] = lines.get('Project Description', '')
@@ -84,6 +86,7 @@ def project_about(context, box):
 
 @augment((PICKLED,))
 def run_about(context, box):
+   ."""Augment resource."""
     lines = get_lines(box)
     box['title'] = 'About'
     box['description'] = lines.get('Project Description', '')
@@ -93,6 +96,7 @@ def run_about(context, box):
 
 @augment((PICKLED,))
 def project_meta(context, box):
+   ."""Augment resource."""
     lines = get_lines(box)
     box['title'] = ''
     box['description'] = [{'Species': lines.get('Species', '')}]
@@ -102,6 +106,7 @@ def project_meta(context, box):
 
 @augment((PICKLED,))
 def experiment_about(context, box):
+   ."""Augment resource."""
     box['title'] = 'About'
     lines = get_lines(box)
     box['description'] = lines.get('Description', '')
@@ -111,6 +116,7 @@ def experiment_about(context, box):
 
 @augment((PICKLED,))
 def experiments(context, box):
+   ."""Augment resource."""
     lines = get_lines(box)
     box['title'] = ''
     box['description'] = lines
@@ -120,10 +126,11 @@ def experiments(context, box):
 
 @augment((JSON, PICKLED))
 def project_experimentstable(context, box):
+   ."""Augment resource."""
     if not box[PICKLED]:
         return
     column_number = len(box[PICKLED]['table_description'])
-    js = """
+    js =."""
    function makeExperimentLink(dataTable, rowNum){
        if (dataTable.getValue(rowNum, 0) != undefined) {
            return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/tab/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
@@ -143,11 +150,13 @@ def project_experimentstable(context, box):
 
 @augment((JSON, PICKLED,))
 def project_experiment_subset_start(context, box):
+   ."""Augment resource."""
     return box
 
 @augment((JSON, PICKLED,))
 def project_experiment_subset_selection(context, box):
-    js = """
+   ."""Augment resource."""
+    js =."""
    function makeExperimentSubsetLink(dataTable, rowNum){
        if (dataTable.getValue(rowNum, 0) != undefined) {
            return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/experiment/subset/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 4) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
@@ -164,8 +173,9 @@ def project_experiment_subset_selection(context, box):
 
 @augment((JSON, PICKLED))
 def project_experiment_subset(context, box):
+   ."""Augment resource."""
     column_number = len(box[PICKLED]['table_description'])
-    js = """
+    js =."""
    function makeExperimentLink(dataTable, rowNum){
        if (dataTable.getValue(rowNum, 0) != undefined) {
            return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/tab/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
@@ -185,12 +195,14 @@ def project_experiment_subset(context, box):
 
 @augment((JSON, PICKLED,))
 def project_experiment_subset_pending(context, box):
+   ."""Augment resource."""
     return box
 
 
 @augment((JSON,))
 def project_downloads(context, box):
-    js = """
+   ."""Augment resource."""
+    js =."""
    function makeDownloadLink(dataTable, rowNum){
        if (dataTable.getValue(rowNum, 0) != undefined) {
            return String.fromCharCode('60') + 'a href=\"' + dataTable.getValue(rowNum, 3) + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 0) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
@@ -200,33 +212,38 @@ def project_downloads(context, box):
        };
    }
    view.setColumns([1,2,{calc:makeDownloadLink, type:'string', label:'.csv File Download Link'}]);
-    """
+   ."""
     box['javascript'] = js
     return box
 
 
 @augment((JSON,))
 def rnadashboard(context, box):
+   ."""Augment resource."""
     box['title'] = ''
     return box
 
 
 @augment((JSON,))
 def rnadashboard_results(context, box):
+   ."""Augment resource."""
     return box
 
 
 @augment((PICKLED,))
 def experiment_sample_info(context, box):
+   ."""Augment resource."""
     return _sample_info(context, box)
 
 
 @augment((PICKLED,))
 def run_sample_info(context, box):
+   ."""Augment resource."""
     return _sample_info(context, box)
 
 
 def _sample_info(context, box):
+   ."""Augment resource."""
     lines = get_lines(box)
     box['title'] = 'Sample Information'
     box['description'] = []
@@ -249,20 +266,24 @@ def _sample_info(context, box):
 
 @augment((PICKLED,))
 def experiment_mapping_info(context, box):
+   ."""Augment resource."""
     return _mapping_info(context, box)
 
 
 @augment((PICKLED,))
 def run_mapping_info(context, box):
+   ."""Augment resource."""
     return _mapping_info(context, box)
 
 
 @augment((PICKLED,))
 def lane_mapping_info(context, box):
+   ."""Augment resource."""
     return _mapping_info(context, box)
 
 
 def _mapping_info(context, box):
+   ."""Augment resource."""
     lines = get_lines(box)
     box['title'] = 'Mapping Information'
     box['description'] = []
@@ -283,7 +304,7 @@ def _mapping_info(context, box):
         if lines.get('Genome Gender', ''):
             add({'Genome Gender': lines['Genome Gender']})
         if lines.get('UCSC Custom Track', '') != "":
-            link = """<a target="_blank" href="%(href)s">%(content)s</a>"""
+            link =."""<a target="_blank" href="%(href)s">%(content)s</a>"""
             parts = {'href': lines['UCSC Custom Track'],
                      'content': "Display as a custom track at UCSC"}
             add({'Visualization': link % parts})
@@ -293,380 +314,456 @@ def _mapping_info(context, box):
 
 @augment((JSON,))
 def experiment_read_summary(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def run_read_summary(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def lane_read_summary(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def experiment_mapping_summary(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def run_mapping_summary(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def lane_mapping_summary(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def experiment_expression_summary(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def run_expression_summary(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def lane_expression_summary(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def experiment_splicing_summary(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def run_splicing_summary(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def lane_splicing_summary(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON, PICKLED))
 def experiment_reads_containing_ambiguous_nucleotides(context, box):
+   ."""Augment resource."""
     return _custom_spaced_chart(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_reads_containing_ambiguous_nucleotides(context, box):
+   ."""Augment resource."""
     return _custom_spaced_chart(context, box)
 
 
 @augment((JSON, PICKLED))
 def experiment_reads_containing_only_unambiguous_nucleotides(context, box):
+   ."""Augment resource."""
     return _custom_spaced_chart(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_reads_containing_only_unambiguous_nucleotides(context, box):
+   ."""Augment resource."""
     return _custom_spaced_chart(context, box)
 
 
 @augment((JSON, PICKLED))
 def experiment_average_percentage_of_unique_reads(context, box):
+   ."""Augment resource."""
     return _custom_spaced_chart(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_average_percentage_of_unique_reads(context, box):
+   ."""Augment resource."""
     return _custom_spaced_chart(context, box)
 
 
 @augment((JSON,))
 def experiment_total_ambiguous_and_unambiguous_reads(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def run_total_ambiguous_and_unambiguous_reads(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def lane_total_ambiguous_and_unambiguous_reads(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def experiment_average_and_average_unique_reads(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def run_average_and_average_unique_reads(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def lane_average_and_average_unique_reads(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON, PICKLED))
 def experiment_percentage_of_reads_with_ambiguous_bases(context, box):
+   ."""Augment resource."""
     return _percentage_of_reads_with_ambiguous_bases(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_percentage_of_reads_with_ambiguous_bases(context, box):
+   ."""Augment resource."""
     return _percentage_of_reads_with_ambiguous_bases(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_percentage_of_reads_with_ambiguous_bases(context, box):
+   ."""Augment resource."""
     return _percentage_of_reads_with_ambiguous_bases(context, box)
 
 
 @augment((JSON, PICKLED))
 def experiment_quality_score_by_position(context, box):
+   ."""Augment resource."""
     return _position(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_quality_score_by_position(context, box):
+   ."""Augment resource."""
     return _position(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_quality_score_by_position(context, box):
+   ."""Augment resource."""
     return _position(context, box)
 
 
 @augment((JSON, PICKLED))
 def experiment_ambiguous_bases_per_position(context, box):
+   ."""Augment resource."""
     return _position(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_ambiguous_bases_per_position(context, box):
+   ."""Augment resource."""
     return _position(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_ambiguous_bases_per_position(context, box):
+   ."""Augment resource."""
     return _position(context, box)
 
 
 @augment((JSON, PICKLED))
 def experiment_merged_mapped_reads(context, box):
+   ."""Augment resource."""
     return _mapped_reads(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_merged_mapped_reads(context, box):
+   ."""Augment resource."""
     return _mapped_reads(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_merged_mapped_reads(context, box):
+   ."""Augment resource."""
     return _mapped_reads(context, box)
 
 
 @augment((JSON, PICKLED))
 def experiment_genome_mapped_reads(context, box):
+   ."""Augment resource."""
     return _mapped_reads(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_genome_mapped_reads(context, box):
+   ."""Augment resource."""
     return _mapped_reads(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_genome_mapped_reads(context, box):
+   ."""Augment resource."""
     return _mapped_reads(context, box)
 
 
 @augment((JSON, PICKLED))
 def experiment_junction_mapped_reads(context, box):
+   ."""Augment resource."""
     return _mapped_reads(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_junction_mapped_reads(context, box):
+   ."""Augment resource."""
     return _mapped_reads(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_junction_mapped_reads(context, box):
+   ."""Augment resource."""
     return _mapped_reads(context, box)
 
 
 @augment((JSON, PICKLED))
 def experiment_split_mapped_reads(context, box):
+   ."""Augment resource."""
     return _mapped_reads(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_split_mapped_reads(context, box):
+   ."""Augment resource."""
     return _mapped_reads(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_split_mapped_reads(context, box):
+   ."""Augment resource."""
     return _mapped_reads(context, box)
 
 
 @augment((JSON, PICKLED))
 def experiment_detected_genes(context, box):
+   ."""Augment resource."""
     return _detected_genes(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_detected_genes(context, box):
+   ."""Augment resource."""
     return _detected_genes(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_detected_genes(context, box):
+   ."""Augment resource."""
     return _detected_genes(context, box)
 
 
 @augment((JSON,))
 def experiment_gene_expression_profile(context, box):
+   ."""Augment resource."""
     return _gene_expression_profile(context, box)
 
 
 @augment((JSON,))
 def run_gene_expression_profile(context, box):
+   ."""Augment resource."""
     return _gene_expression_profile(context, box)
 
 
 @augment((JSON,))
 def lane_gene_expression_profile(context, box):
+   ."""Augment resource."""
     return _gene_expression_profile(context, box)
 
 
 @augment((JSON,))
 def experiment_gene_expression_levels(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def run_gene_expression_levels(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def lane_gene_expression_levels(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON, PICKLED))
 def experiment_top_genes(context, box):
+   ."""Augment resource."""
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_top_genes(context, box):
+   ."""Augment resource."""
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_top_genes(context, box):
+   ."""Augment resource."""
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def experiment_top_transcripts(context, box):
+   ."""Augment resource."""
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_top_transcripts(context, box):
+   ."""Augment resource."""
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_top_transcripts(context, box):
+   ."""Augment resource."""
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def experiment_top_exons(context, box):
+   ."""Augment resource."""
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def run_top_exons(context, box):
+   ."""Augment resource."""
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_top_exons(context, box):
+   ."""Augment resource."""
     return _thousands_formatter(context, box)
 
 
 @augment((JSON,))
 def experiment_exon_inclusion_profile(context, box):
+   ."""Augment resource."""
     return _exon_inclusion_profile(context, box)
 
 
 @augment((JSON,))
 def run_exon_inclusion_profile(context, box):
+   ."""Augment resource."""
     return _exon_inclusion_profile(context, box)
 
 
 @augment((JSON,))
 def lane_exon_inclusion_profile(context, box):
+   ."""Augment resource."""
     return _exon_inclusion_profile(context, box)
 
 
 @augment((JSON,))
 def experiment_reads_supporting_exon_inclusions(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def run_reads_supporting_exon_inclusions(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def lane_reads_supporting_exon_inclusions(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def experiment_novel_junctions_from_annotated_exons(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def run_novel_junctions_from_annotated_exons(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def lane_novel_junctions_from_annotated_exons(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def experiment_novel_junctions_from_unannotated_exons(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def run_novel_junctions_from_unannotated_exons(context, box):
+   ."""Augment resource."""
     pass
 
 
 @augment((JSON,))
 def lane_novel_junctions_from_unannotated_exons(context, box):
+   ."""Augment resource."""
     pass
 
 
 def _exon_inclusion_profile(context, box):
+   ."""Augment resource."""
     vAxis = '''{logScale:true}'''
     box['chartoptions']['vAxis'] = vAxis
     box['chartoptions']['width'] = 900
@@ -677,6 +774,7 @@ def _exon_inclusion_profile(context, box):
 
 
 def _gene_expression_profile(context, box):
+   ."""Augment resource."""
     vAxis = '''{logScale:true}'''
     box['chartoptions']['vAxis'] = vAxis
     hAxis = '''{logScale:true}'''
@@ -689,6 +787,7 @@ def _gene_expression_profile(context, box):
 
 
 def _custom_spaced_chart(context, box):
+   ."""Augment resource."""
     table = box[PICKLED]
     height = max(len(table['table_data']) * 40, 100)
     box['chartoptions']['height'] = str(height)
@@ -698,6 +797,7 @@ def _custom_spaced_chart(context, box):
 
 
 def _thousands_formatter(context, box):
+   ."""Augment resource."""
     javascript = "thousandsformatter.format(data, %s);\n"
     table = box[PICKLED]
     i = 0
@@ -709,15 +809,17 @@ def _thousands_formatter(context, box):
 
 
 def _detected_genes(context, box):
+   ."""Augment resource."""
     box['javascript'] = ""
     table = box[PICKLED]
     # Add formatting for expression values of lanes
     for i in range(1, len(table['table_description'])):
-        box['javascript'] += """thousandsformatter.format(data, %s);\n""" % i
+        box['javascript'] +=."""thousandsformatter.format(data, %s);\n""" % i
     return box
 
 
 def _mapped_reads(context, box):
+   ."""Augment resource."""
     table = box[PICKLED]
     height = max(len(table['table_data']) * 40, 100)
     box['chartoptions']['height'] = str(height)
@@ -726,12 +828,14 @@ def _mapped_reads(context, box):
 
 
 def _percentage_of_reads_with_ambiguous_bases(context, box):
+   ."""Augment resource."""
     table = box[PICKLED]
     height = max(len(table['table_data']) * 60, 160)
     box['chartoptions']['height'] = str(height)
 
 
 def _position(context, box):
+   ."""Augment resource."""
     vAxis = '''{logScale:true}'''
     box['chartoptions']['vAxis'] = vAxis
     box['chartoptions']['width'] = 900
