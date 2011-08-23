@@ -11,7 +11,6 @@ from config import PICKLED
 from raisin.box import RESOURCES_REGISTRY
 from gvizapi import gviz_api
 
-
 class augment(object):
     """This is a decorator that registers methods augmenting resources.
 
@@ -67,6 +66,9 @@ def get_lines(box):
 
 # pylint: disable-msg=W0613
 # Sometimes not all parameters are used, which is not a problem
+
+# pylint: disable-msg=C0103
+# XXX method names are too long
 
 @augment((PICKLED,))
 def projects(context, box):
@@ -797,7 +799,8 @@ def _thousands_formatter(context, box):
     javascript = "thousandsformatter.format(data, %s);\n"
     table = box[PICKLED]
     index = 0
-    for column, column_type in table['table_description']:
+    column_types = [desc[1] for desc in table['table_description']]
+    for column_type in column_types:
         if column_type == 'number':
             box['javascript'] += javascript % index
         index += 1
