@@ -30,6 +30,8 @@ class augment(object):
 
     box['description'] = [{'Species': box[PICKLED]['species']}]
     """
+    # pylint: disable-msg=C0103
+    # This class is used as a decorator, so allow lower case name
 
     def __init__(self, formats):
         """Store the formats that need to be fetched for the method"""
@@ -132,7 +134,7 @@ def project_experimentstable(context, box):
     if not box[PICKLED]:
         return
     column_number = len(box[PICKLED]['table_description'])
-    js = """
+    javascript = """
    function makeExperimentLink(dataTable, rowNum){
        if (dataTable.getValue(rowNum, 0) != undefined) {
            return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/tab/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
@@ -146,7 +148,7 @@ def project_experimentstable(context, box):
     # e.g.
     # >>> str(range(2, 4))[1:-1]
     # '2, 3'
-    box['javascript'] = js
+    box['javascript'] = javascript
     return box
 
 
@@ -158,7 +160,7 @@ def project_experiment_subset_start(context, box):
 @augment((JSON, PICKLED,))
 def project_experiment_subset_selection(context, box):
     """Augment resource."""
-    js = """
+    javascript = """
    function makeExperimentSubsetLink(dataTable, rowNum){
        if (dataTable.getValue(rowNum, 0) != undefined) {
            return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/experiment/subset/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 4) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
@@ -169,7 +171,7 @@ def project_experiment_subset_selection(context, box):
    }
    view.setColumns([3, {calc:makeExperimentSubsetLink, type:'string', label:'Parameter Value'}, 5]);
 """
-    box['javascript'] = js
+    box['javascript'] = javascript
     return box
 
 
@@ -177,7 +179,7 @@ def project_experiment_subset_selection(context, box):
 def project_experiment_subset(context, box):
     """Augment resource."""
     column_number = len(box[PICKLED]['table_description'])
-    js = """
+    javascript = """
    function makeExperimentLink(dataTable, rowNum){
        if (dataTable.getValue(rowNum, 0) != undefined) {
            return String.fromCharCode('60') + 'a href=\"/project/' + dataTable.getValue(rowNum, 0) + '/' + dataTable.getValue(rowNum, 1) + '/' + dataTable.getValue(rowNum, 2) + '/tab/experiments' + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 2) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
@@ -191,7 +193,7 @@ def project_experiment_subset(context, box):
     # e.g.
     # >>> str(range(2, 4))[1:-1]
     # '2, 3'
-    box['javascript'] = js
+    box['javascript'] = javascript
     return box
 
 
@@ -204,7 +206,7 @@ def project_experiment_subset_pending(context, box):
 @augment((JSON,))
 def project_downloads(context, box):
     """Augment resource."""
-    js = """
+    javascript = """
    function makeDownloadLink(dataTable, rowNum){
        if (dataTable.getValue(rowNum, 0) != undefined) {
            return String.fromCharCode('60') + 'a href=\"' + dataTable.getValue(rowNum, 3) + '\"' + String.fromCharCode('62') + dataTable.getValue(rowNum, 0) + String.fromCharCode('60') + '/a' + String.fromCharCode('62');
@@ -215,7 +217,7 @@ def project_downloads(context, box):
    }
    view.setColumns([1,2,{calc:makeDownloadLink, type:'string', label:'.csv File Download Link'}]);
     """
-    box['javascript'] = js
+    box['javascript'] = javascript
     return box
 
 
@@ -799,11 +801,11 @@ def _thousands_formatter(context, box):
     """Augment resource."""
     javascript = "thousandsformatter.format(data, %s);\n"
     table = box[PICKLED]
-    i = 0
+    index = 0
     for column, column_type in table['table_description']:
         if column_type == 'number':
-            box['javascript'] += javascript % i
-        i = i + 1
+            box['javascript'] += javascript % index
+        index += 1
     return box
 
 
@@ -812,8 +814,9 @@ def _detected_genes(context, box):
     box['javascript'] = ""
     table = box[PICKLED]
     # Add formatting for expression values of lanes
-    for i in range(1, len(table['table_description'])):
-        box['javascript'] += """thousandsformatter.format(data, %s);\n""" % i
+    for index in range(1, len(table['table_description'])):
+        formatter = """thousandsformatter.format(data, %s);\n""" % index
+        box['javascript'] += formatter
     return box
 
 
