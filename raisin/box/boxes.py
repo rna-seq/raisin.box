@@ -766,8 +766,7 @@ def lane_novel_junctions_from_unannotated_exons(context, box):
 
 def _exon_inclusion_profile(context, box):
     """Augment resource."""
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
+    box['chartoptions']['vAxis'] = "{logScale:true}"
     box['chartoptions']['width'] = 900
     box['chartoptions']['height'] = 640
     chartArea = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
@@ -777,10 +776,8 @@ def _exon_inclusion_profile(context, box):
 
 def _gene_expression_profile(context, box):
     """Augment resource."""
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
-    hAxis = '''{logScale:true}'''
-    box['chartoptions']['hAxis'] = hAxis
+    box['chartoptions']['vAxis'] = "{logScale:true}"
+    box['chartoptions']['hAxis'] = "{logScale:true}"
     box['chartoptions']['width'] = 900
     box['chartoptions']['height'] = 640
     chartArea = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
@@ -838,7 +835,6 @@ def _percentage_of_reads_with_ambiguous_bases(context, box):
 
 def _position(context, box):
     """Augment resource."""
-    vAxis = '''{logScale:true}'''
-    box['chartoptions']['vAxis'] = vAxis
+    box['chartoptions']['vAxis'] = "{logScale:true}"
     box['chartoptions']['width'] = 900
     box['chartoptions']['height'] = 640
