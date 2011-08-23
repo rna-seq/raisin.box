@@ -769,8 +769,8 @@ def _exon_inclusion_profile(context, box):
     box['chartoptions']['vAxis'] = "{logScale:true}"
     box['chartoptions']['width'] = 900
     box['chartoptions']['height'] = 640
-    chartArea = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
-    box['chartoptions']['chartArea'] = chartArea
+    area = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
+    box['chartoptions']['chartArea'] = area
     return box
 
 
@@ -780,8 +780,8 @@ def _gene_expression_profile(context, box):
     box['chartoptions']['hAxis'] = "{logScale:true}"
     box['chartoptions']['width'] = 900
     box['chartoptions']['height'] = 640
-    chartArea = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
-    box['chartoptions']['chartArea'] = chartArea
+    area = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
+    box['chartoptions']['chartArea'] = area
     return box
 
 
@@ -822,8 +822,8 @@ def _mapped_reads(context, box):
     table = box[PICKLED]
     height = max(len(table['table_data']) * 40, 100)
     box['chartoptions']['height'] = str(height)
-    chartArea = '{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'
-    box['chartoptions']['chartArea'] = chartArea
+    area = '{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'
+    box['chartoptions']['chartArea'] = area
 
 
 def _percentage_of_reads_with_ambiguous_bases(context, box):
