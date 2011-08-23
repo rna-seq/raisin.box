@@ -307,11 +307,6 @@ def _mapping_info(context, box):
             add({'Genome Source': lines['Genome Source']})
         if lines.get('Genome Gender', ''):
             add({'Genome Gender': lines['Genome Gender']})
-        if lines.get('UCSC Custom Track', '') != "":
-            link = """<a target="_blank" href="%(href)s">%(content)s</a>"""
-            parts = {'href': lines['UCSC Custom Track'],
-                     'content': "Display as a custom track at UCSC"}
-            add({'Visualization': link % parts})
     box['description_type'] = 'properties'
     return box
 
