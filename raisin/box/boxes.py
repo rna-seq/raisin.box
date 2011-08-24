@@ -11,6 +11,7 @@ from config import PICKLED
 from raisin.box import RESOURCES_REGISTRY
 from gvizapi import gviz_api
 
+
 class augment(object):
     """This is a decorator that registers methods augmenting resources.
 
@@ -64,12 +65,12 @@ def get_lines(box):
         lines = {}
     return lines
 
+
 # pylint: disable-msg=W0613
 # Sometimes not all parameters are used, which is not a problem
 
 # pylint: disable-msg=C0103
 # XXX method names are too long
-
 @augment((PICKLED,))
 def projects(context, box):
     """Augment resource."""
@@ -158,6 +159,7 @@ def project_experimentstable(context, box):
 def project_experiment_subset_start(context, box):
     """Augment resource."""
     return box
+
 
 @augment((JSON, PICKLED,))
 def project_experiment_subset_selection(context, box):
