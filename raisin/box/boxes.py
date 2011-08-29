@@ -146,7 +146,7 @@ def project_experimentstable(context, box):
            return '';
        };
    }
-   view.setColumns([{calc:makeExperimentLink, type:'string', label:'Experiment'},%s]);
+   view.setColumns([{calc:makeExperimentLink, type:'string', label:'Replicate'},%s]);
 """ % str(range(3, column_number))[1:-1]
     # e.g.
     # >>> str(range(2, 4))[1:-1]
@@ -192,7 +192,7 @@ def project_experiment_subset(context, box):
            return '';
        };
    }
-   view.setColumns([{calc:makeExperimentLink, type:'string', label:'Experiment'},%s]);
+   view.setColumns([{calc:makeExperimentLink, type:'string', label:'Replicate'},%s]);
 """ % str(range(3, column_number))[1:-1]
     # e.g.
     # >>> str(range(2, 4))[1:-1]
