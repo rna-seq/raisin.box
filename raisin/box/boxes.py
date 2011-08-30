@@ -92,7 +92,7 @@ def project_about(context, box):
 
 
 @augment((PICKLED,))
-def run_about(context, box):
+def experiment_about(context, box):
     """Augment resource."""
     lines = get_lines(box)
     box['title'] = 'About'
@@ -245,7 +245,7 @@ def replicate_sample_info(context, box):
 
 
 @augment((PICKLED,))
-def run_sample_info(context, box):
+def experiment_sample_info(context, box):
     """Augment resource."""
     return _sample_info(context, box)
 
@@ -279,7 +279,7 @@ def replicate_mapping_info(context, box):
 
 
 @augment((PICKLED,))
-def run_mapping_info(context, box):
+def experiment_mapping_info(context, box):
     """Augment resource."""
     return _mapping_info(context, box)
 
@@ -322,7 +322,7 @@ def replicate_read_summary(context, box):
 
 
 @augment((JSON,))
-def run_read_summary(context, box):
+def experiment_read_summary(context, box):
     """Augment resource."""
     pass
 
@@ -340,7 +340,7 @@ def replicate_mapping_summary(context, box):
 
 
 @augment((JSON,))
-def run_mapping_summary(context, box):
+def experiment_mapping_summary(context, box):
     """Augment resource."""
     pass
 
@@ -358,7 +358,7 @@ def replicate_expression_summary(context, box):
 
 
 @augment((JSON,))
-def run_expression_summary(context, box):
+def experiment_expression_summary(context, box):
     """Augment resource."""
     pass
 
@@ -376,7 +376,7 @@ def replicate_splicing_summary(context, box):
 
 
 @augment((JSON,))
-def run_splicing_summary(context, box):
+def experiment_splicing_summary(context, box):
     """Augment resource."""
     pass
 
@@ -394,7 +394,7 @@ def replicate_reads_containing_ambiguous_nucleotides(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_reads_containing_ambiguous_nucleotides(context, box):
+def experiment_reads_containing_ambiguous_nucleotides(context, box):
     """Augment resource."""
     return _custom_spaced_chart(context, box)
 
@@ -406,7 +406,7 @@ def replicate_reads_containing_only_unambiguous_nucleotides(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_reads_containing_only_unambiguous_nucleotides(context, box):
+def experiment_reads_containing_only_unambiguous_nucleotides(context, box):
     """Augment resource."""
     return _custom_spaced_chart(context, box)
 
@@ -418,7 +418,7 @@ def replicate_average_percentage_of_unique_reads(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_average_percentage_of_unique_reads(context, box):
+def experiment_average_percentage_of_unique_reads(context, box):
     """Augment resource."""
     return _custom_spaced_chart(context, box)
 
@@ -430,7 +430,7 @@ def replicate_total_ambiguous_and_unambiguous_reads(context, box):
 
 
 @augment((JSON,))
-def run_total_ambiguous_and_unambiguous_reads(context, box):
+def experiment_total_ambiguous_and_unambiguous_reads(context, box):
     """Augment resource."""
     pass
 
@@ -448,7 +448,7 @@ def replicate_average_and_average_unique_reads(context, box):
 
 
 @augment((JSON,))
-def run_average_and_average_unique_reads(context, box):
+def experiment_average_and_average_unique_reads(context, box):
     """Augment resource."""
     pass
 
@@ -466,7 +466,7 @@ def replicate_percentage_of_reads_with_ambiguous_bases(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_percentage_of_reads_with_ambiguous_bases(context, box):
+def experiment_percentage_of_reads_with_ambiguous_bases(context, box):
     """Augment resource."""
     return _percentage_of_reads_with_ambiguous_bases(context, box)
 
@@ -484,7 +484,7 @@ def replicate_quality_score_by_position(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_quality_score_by_position(context, box):
+def experiment_quality_score_by_position(context, box):
     """Augment resource."""
     return _position(context, box)
 
@@ -502,7 +502,7 @@ def replicate_ambiguous_bases_per_position(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_ambiguous_bases_per_position(context, box):
+def experiment_ambiguous_bases_per_position(context, box):
     """Augment resource."""
     return _position(context, box)
 
@@ -520,7 +520,7 @@ def replicate_merged_mapped_reads(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_merged_mapped_reads(context, box):
+def experiment_merged_mapped_reads(context, box):
     """Augment resource."""
     return _mapped_reads(context, box)
 
@@ -538,7 +538,7 @@ def replicate_genome_mapped_reads(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_genome_mapped_reads(context, box):
+def experiment_genome_mapped_reads(context, box):
     """Augment resource."""
     return _mapped_reads(context, box)
 
@@ -556,7 +556,7 @@ def replicate_junction_mapped_reads(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_junction_mapped_reads(context, box):
+def experiment_junction_mapped_reads(context, box):
     """Augment resource."""
     return _mapped_reads(context, box)
 
@@ -574,7 +574,7 @@ def replicate_split_mapped_reads(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_split_mapped_reads(context, box):
+def experiment_split_mapped_reads(context, box):
     """Augment resource."""
     return _mapped_reads(context, box)
 
@@ -592,7 +592,7 @@ def replicate_detected_genes(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_detected_genes(context, box):
+def experiment_detected_genes(context, box):
     """Augment resource."""
     return _detected_genes(context, box)
 
@@ -610,7 +610,7 @@ def replicate_gene_expression_profile(context, box):
 
 
 @augment((JSON,))
-def run_gene_expression_profile(context, box):
+def experiment_gene_expression_profile(context, box):
     """Augment resource."""
     return _gene_expression_profile(context, box)
 
@@ -628,7 +628,7 @@ def replicate_gene_expression_levels(context, box):
 
 
 @augment((JSON,))
-def run_gene_expression_levels(context, box):
+def experiment_gene_expression_levels(context, box):
     """Augment resource."""
     pass
 
@@ -646,7 +646,7 @@ def replicate_top_genes(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_top_genes(context, box):
+def experiment_top_genes(context, box):
     """Augment resource."""
     return _thousands_formatter(context, box)
 
@@ -664,7 +664,7 @@ def replicate_top_transcripts(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_top_transcripts(context, box):
+def experiment_top_transcripts(context, box):
     """Augment resource."""
     return _thousands_formatter(context, box)
 
@@ -682,7 +682,7 @@ def replicate_top_exons(context, box):
 
 
 @augment((JSON, PICKLED))
-def run_top_exons(context, box):
+def experiment_top_exons(context, box):
     """Augment resource."""
     return _thousands_formatter(context, box)
 
@@ -700,7 +700,7 @@ def replicate_exon_inclusion_profile(context, box):
 
 
 @augment((JSON,))
-def run_exon_inclusion_profile(context, box):
+def experiment_exon_inclusion_profile(context, box):
     """Augment resource."""
     return _exon_inclusion_profile(context, box)
 
@@ -718,7 +718,7 @@ def replicate_reads_supporting_exon_inclusions(context, box):
 
 
 @augment((JSON,))
-def run_reads_supporting_exon_inclusions(context, box):
+def experiment_reads_supporting_exon_inclusions(context, box):
     """Augment resource."""
     pass
 
@@ -736,7 +736,7 @@ def replicate_novel_junctions_from_annotated_exons(context, box):
 
 
 @augment((JSON,))
-def run_novel_junctions_from_annotated_exons(context, box):
+def experiment_novel_junctions_from_annotated_exons(context, box):
     """Augment resource."""
     pass
 
@@ -754,7 +754,7 @@ def replicate_novel_junctions_from_unannotated_exons(context, box):
 
 
 @augment((JSON,))
-def run_novel_junctions_from_unannotated_exons(context, box):
+def experiment_novel_junctions_from_unannotated_exons(context, box):
     """Augment resource."""
     pass
 
