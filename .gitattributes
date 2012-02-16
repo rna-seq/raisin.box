@@ -1,12 +1,1 @@
 * text=auto !eol
-/README.txt -text
-raisin/__init__.py -text
-raisin/box/__init__.py -text
-raisin/box/boxes.ini -text
-raisin/box/boxes.py -text
-raisin/box/config.py -text
-raisin/box/resources.ini -text
-raisin/box/tests/test_box.py -text
-/setup.cfg -text
-/setup.py -text
-/version.txt -text
