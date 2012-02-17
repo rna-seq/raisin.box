@@ -262,8 +262,8 @@ def _sample_info(context, box):
             box['description'].append({'Cell Type': lines['Cell Type']})
         if lines['RNA Type']:
             box['description'].append({'RNA Type': lines['RNA Type']})
-        if lines['Compartment']:
-            box['description'].append({'Compartment': lines['Compartment']})
+        if lines['Localization']:
+            box['description'].append({'Localization': lines['Localization']})
         if lines['Bio Replicate']:
             box['description'].append({'Bio Replicate': lines['Bio Replicate']})
         if lines['Date']:
