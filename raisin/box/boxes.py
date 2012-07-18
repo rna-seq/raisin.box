@@ -559,7 +559,7 @@ def experiment_read_distribution(self, box):
 
     # Dynamically fill in the table structure in the read distribution HTML div element
     js = ""
-    js += """document.getElementById('read_distribution_div').innerHTML='"""
+    js += """document.getElementById('experiment_read_distribution_div').innerHTML='"""
     js += """<table class="minicharttable"><tr><td>Distribution</td><td>Lane ID</td>"""
     
     # Ignore the first start (0), which is reserved for the overall read distribution
