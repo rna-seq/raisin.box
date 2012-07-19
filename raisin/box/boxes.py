@@ -514,6 +514,42 @@ def lane_ambiguous_bases_per_position(context, box):
 
 @augment((JSON, PICKLED))
 def experiment_read_distribution(self, box):
+    """Experiment level read distribution"""
+    return _read_distribution(self, box, 'experiment')
+
+
+@augment((JSON, PICKLED))
+def replicate_read_distribution(self, box):
+    """Read level read distribution"""
+    return _read_distribution(self, box, 'replicate')
+
+
+@augment((JSON, PICKLED))
+def lane_read_distribution(self, box):
+    """
+    The sparklines need to be inserted into the HTML table cells of the read distribution table.
+    
+    For each lane, the read distributions for the different length categories are shown.
+    
+    There is a div with a specific target id for each Google Charts Data View on the Google Charts
+    Data Table.
+
+    This is the target div for the overall distribution of the first lane:
+    
+    <div id="read_distribution_0_0_div">
+
+    This is the target div for the overall distribution of the second lane:        
+
+    <div id="read_distribution_1_0_div">
+
+    This is the target div for the second range (100-999):
+    
+    <div id="read_distribution_1_2_div">
+    """
+    return _read_distribution(self, box, 'lane')
+
+
+def _read_distribution(self, box, level):
     """
     The sparklines need to be inserted into the HTML table cells of the read distribution table.
     
@@ -559,7 +595,7 @@ def experiment_read_distribution(self, box):
 
     # Dynamically fill in the table structure in the read distribution HTML div element
     js = ""
-    js += """document.getElementById('experiment_read_distribution_div').innerHTML='"""
+    js += """document.getElementById('%s_read_distribution_div').innerHTML='""" % level
     js += """<table class="google-visualization-table-table"><tr class="google-visualization-table-tr-head"><td class="google-visualization-table-th">Distribution</td><td class="google-visualization-table-th">Replicate ID</td><td class="google-visualization-table-th">Lane ID</td>"""
     
     # Ignore the first start (0), which is reserved for the overall read distribution
@@ -596,172 +632,6 @@ chart.draw(view, {width: 100, height: 100, showAxisLines: false,  showValueLabel
 
     return box
 
-@augment((JSON, PICKLED))
-def replicate_read_distribution(self, box):
-    """
-    The sparklines need to be inserted into the HTML table cells of the read distribution table.
-    
-    For each lane, the read distributions for the different length categories are shown.
-    
-    There is a div with a specific target id for each Google Charts Data View on the Google Charts
-    Data Table.
-
-    This is the target div for the overall distribution of the first lane:
-    
-    <div id="read_distribution_0_0_div">
-
-    This is the target div for the overall distribution of the second lane:        
-
-    <div id="read_distribution_1_0_div">
-
-    This is the target div for the second range (100-999):
-    
-    <div id="read_distribution_1_2_div">
-    """
-    box['javascript'] = ""
-     
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-
-    # Fetch the lane names from the table        
-    replicate_lane_names = list(set([(item[0], item[1]) for item in table['table_data']]))
-    replicate_lane_names.sort()
-    
-    # Fetch the starts from the table        
-    starts = list(set([item[2] for item in table['table_data']]))
-    starts.sort()
-    
-    # Calculate the ranges given the starts        
-    ranges = {}
-    for pos in range(0, len(starts)):
-        if pos == len(starts)-1:
-            # The last range goes to infinity
-            ranges[starts[pos]] = (str(starts[pos]), 'n')
-        else:
-            # The range goes until just before the start of the next range
-            ranges[starts[pos]] = (str(starts[pos]), str(starts[pos+1] - 1))       
-
-    # Dynamically fill in the table structure in the read distribution HTML div element
-    js = ""
-    js += """document.getElementById('replicate_read_distribution_div').innerHTML='"""
-    js += """<table class="minicharttable"><tr><td>Distribution</td><td>Replicate ID</td><td>Lane ID</td>"""
-    
-    # Ignore the first start (0), which is reserved for the overall read distribution
-    for start in starts[1:]:
-        js += """<td>%s - %s</td>""" % (ranges[start][0], ranges[start][1])
-    js +=     """</tr>"""
-    # Fill in the rows for each labe        
-    for replicate_name, lane_name in replicate_lane_names:
-        js += """<tr><td><div id="read_distribution_%s_0_div"></div></td><td style="vertical-align: middle;">%s</td><td style="vertical-align: middle;">%s</td>""" % (replicate_lane_names.index((replicate_name, lane_name)), replicate_name, lane_name)
-        # Fill in the cells for the individual read distributions
-        for start in starts[1:]:
-            js += '<td>'
-            js += """<div id="read_distribution_%s_%s_div"></div>""" % (replicate_lane_names.index((replicate_name, lane_name)), starts.index(start))
-            js += '</td>'
-        js += '</tr>'
-    js += """</table>'"""
-    box['javascript'] = js
-
-    # Create the JavaScript code for the div tags that were just dynamically added
-    for replicate_name, lane_name in replicate_lane_names:
-        for start in starts:
-            # Add a new view for each range of each lane
-            box['javascript'] = box['javascript'] + """
-var view = new google.visualization.DataView(data);
-view.setRows(data.getFilteredRows([{column: 0, value: '%s'}, {column: 1, value: '%s'}, {column: 2, value: %s}]))
-view.setColumns([4])
-var chart = new google.visualization.ImageSparkLine(document.getElementById('read_distribution_%s_%s_div'));
-chart.draw(view, {width: 100, height: 100, showAxisLines: false,  showValueLabels: false, labelPosition: 'none'});
-""" % (replicate_name,  # Filter on replicate in the data table
-   lane_name, # Filter on lane in the data table 
-   start, # Filter on start in the data table
-   replicate_lane_names.index((replicate_name, lane_name)), # The index of the replicate and lane is used for the id of the target div
-   starts.index(start)) # The index of the range is also used for the id of the target div
-
-    return box
-
-@augment((JSON, PICKLED))
-def lane_read_distribution(self, box):
-    """
-    The sparklines need to be inserted into the HTML table cells of the read distribution table.
-    
-    For each lane, the read distributions for the different length categories are shown.
-    
-    There is a div with a specific target id for each Google Charts Data View on the Google Charts
-    Data Table.
-
-    This is the target div for the overall distribution of the first lane:
-    
-    <div id="read_distribution_0_0_div">
-
-    This is the target div for the overall distribution of the second lane:        
-
-    <div id="read_distribution_1_0_div">
-
-    This is the target div for the second range (100-999):
-    
-    <div id="read_distribution_1_2_div">
-    """
-    box['javascript'] = ""
-     
-    # Need to extract some infos from the table, so load the pickled dictionary
-    table = box[PICKLED]
-    
-    # Fetch the lane names from the table        
-    lane_names = list(set([item[0] for item in table['table_data']]))
-    lane_names.sort()
-    
-    # Fetch the starts from the table        
-    starts = list(set([item[1] for item in table['table_data']]))
-    starts.sort()
-    
-    # Calculate the ranges given the starts        
-    ranges = {}
-    for pos in range(0, len(starts)):
-        if pos == len(starts)-1:
-            # The last range goes to infinity
-            ranges[starts[pos]] = (str(starts[pos]), 'n')
-        else:
-            # The range goes until just before the start of the next range
-            ranges[starts[pos]] = (str(starts[pos]), str(starts[pos+1] - 1))       
-
-    # Dynamically fill in the table structure in the read distribution HTML div element
-    js = ""
-    js += """document.getElementById('read_distribution_div').innerHTML='"""
-    js += """<table class="minicharttable"><tr><td>Distribution</td><td>Lane ID</td>"""
-    
-    # Ignore the first start (0), which is reserved for the overall read distribution
-    for start in starts[1:]:
-        js += """<td>%s - %s</td>""" % (ranges[start][0], ranges[start][1])
-    js +=     """</tr>"""
-    # Fill in the rows for each labe        
-    for lane_name in lane_names:
-        js += """<tr><td><div id="read_distribution_%s_0_div"></div></td><td style="vertical-align: middle;">%s</td>""" % (lane_names.index(lane_name), lane_name)
-        # Fill in the cells for the individual read distributions
-        for start in starts[1:]:
-            js += '<td>'
-            js += """<div id="read_distribution_%s_%s_div"></div>""" % (lane_names.index(lane_name), starts.index(start))
-            js += '</td>'
-        js += '</tr>'
-    js += """</table>'"""
-    box['javascript'] = js
-
-    # Create the JavaScript code for the div tags that were just dynamically added
-    for lane in lane_names:            
-        for start in starts:
-            # Add a new view for each range of each lane
-            box['javascript'] = box['javascript'] + """
-var view = new google.visualization.DataView(data);
-view.setRows(data.getFilteredRows([{column: 0, value: '%s'}, {column: 1, value: %s}]))
-view.setColumns([3])
-var chart = new google.visualization.ImageSparkLine(document.getElementById('read_distribution_%s_%s_div'));
-chart.draw(view, {width: 100, height: 100, showAxisLines: false,  showValueLabels: false, labelPosition: 'none'});
-""" % (lane, # The first filter on the data table is by lane 
-   start, # The second filter on the data table is by start
-   lane_names.index(lane), # The index of the lane is used for the id of the target div
-   starts.index(start)) # The index of the range is also used for the id of the target div
-
-    return box
 
 @augment((JSON, PICKLED))
 def experiment_merged_mapped_reads(context, box):
