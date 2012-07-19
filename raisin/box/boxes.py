@@ -621,13 +621,13 @@ def replicate_read_distribution(self, box):
      
     # Need to extract some infos from the table, so load the pickled dictionary
     table = box[PICKLED]
-    
+
     # Fetch the lane names from the table        
-    lane_names = list(set([item[0] for item in table['table_data']]))
-    lane_names.sort()
+    replicate_lane_names = list(set([(item[0], item[1]) for item in table['table_data']]))
+    replicate_lane_names.sort()
     
     # Fetch the starts from the table        
-    starts = list(set([item[1] for item in table['table_data']]))
+    starts = list(set([item[2] for item in table['table_data']]))
     starts.sort()
     
     # Calculate the ranges given the starts        
@@ -643,37 +643,38 @@ def replicate_read_distribution(self, box):
     # Dynamically fill in the table structure in the read distribution HTML div element
     js = ""
     js += """document.getElementById('replicate_read_distribution_div').innerHTML='"""
-    js += """<table class="minicharttable"><tr><td>Distribution</td><td>Lane ID</td>"""
+    js += """<table class="minicharttable"><tr><td>Distribution</td><td>Replicate ID</td><td>Lane ID</td>"""
     
     # Ignore the first start (0), which is reserved for the overall read distribution
     for start in starts[1:]:
         js += """<td>%s - %s</td>""" % (ranges[start][0], ranges[start][1])
     js +=     """</tr>"""
     # Fill in the rows for each labe        
-    for lane_name in lane_names:
-        js += """<tr><td><div id="read_distribution_%s_0_div"></div></td><td style="vertical-align: middle;">%s</td>""" % (lane_names.index(lane_name), lane_name)
+    for replicate_name, lane_name in replicate_lane_names:
+        js += """<tr><td><div id="read_distribution_%s_0_div"></div></td><td style="vertical-align: middle;">%s</td><td style="vertical-align: middle;">%s</td>""" % (replicate_lane_names.index((replicate_name, lane_name)), replicate_name, lane_name)
         # Fill in the cells for the individual read distributions
         for start in starts[1:]:
             js += '<td>'
-            js += """<div id="read_distribution_%s_%s_div"></div>""" % (lane_names.index(lane_name), starts.index(start))
+            js += """<div id="read_distribution_%s_%s_div"></div>""" % (replicate_lane_names.index((replicate_name, lane_name)), starts.index(start))
             js += '</td>'
         js += '</tr>'
     js += """</table>'"""
     box['javascript'] = js
 
     # Create the JavaScript code for the div tags that were just dynamically added
-    for lane in lane_names:            
+    for replicate_name, lane_name in replicate_lane_names:
         for start in starts:
             # Add a new view for each range of each lane
             box['javascript'] = box['javascript'] + """
 var view = new google.visualization.DataView(data);
-view.setRows(data.getFilteredRows([{column: 0, value: '%s'}, {column: 1, value: %s}]))
-view.setColumns([3])
+view.setRows(data.getFilteredRows([{column: 0, value: '%s'}, {column: 1, value: '%s'}, {column: 2, value: %s}]))
+view.setColumns([4])
 var chart = new google.visualization.ImageSparkLine(document.getElementById('read_distribution_%s_%s_div'));
 chart.draw(view, {width: 100, height: 100, showAxisLines: false,  showValueLabels: false, labelPosition: 'none'});
-""" % (lane, # The first filter on the data table is by lane 
-   start, # The second filter on the data table is by start
-   lane_names.index(lane), # The index of the lane is used for the id of the target div
+""" % (replicate_name,  # Filter on replicate in the data table
+   lane_name, # Filter on lane in the data table 
+   start, # Filter on start in the data table
+   replicate_lane_names.index((replicate_name, lane_name)), # The index of the replicate and lane is used for the id of the target div
    starts.index(start)) # The index of the range is also used for the id of the target div
 
     return box
