@@ -560,18 +560,18 @@ def experiment_read_distribution(self, box):
     # Dynamically fill in the table structure in the read distribution HTML div element
     js = ""
     js += """document.getElementById('experiment_read_distribution_div').innerHTML='"""
-    js += """<table class="minicharttable"><tr><td>Distribution</td><td>Replicate ID</td><td>Lane ID</td>"""
+    js += """<table class="google-visualization-table-table"><tr class="google-visualization-table-tr-head"><td class="google-visualization-table-th">Distribution</td><td class="google-visualization-table-th">Replicate ID</td><td class="google-visualization-table-th">Lane ID</td>"""
     
     # Ignore the first start (0), which is reserved for the overall read distribution
     for start in starts[1:]:
-        js += """<td>%s - %s</td>""" % (ranges[start][0], ranges[start][1])
+        js += """<td class="google-visualization-table-th">%s - %s</td>""" % (ranges[start][0], ranges[start][1])
     js +=     """</tr>"""
     # Fill in the rows for each labe        
     for replicate_name, lane_name in replicate_lane_names:
-        js += """<tr><td><div id="read_distribution_%s_0_div"></div></td><td style="vertical-align: middle;">%s</td><td style="vertical-align: middle;">%s</td>""" % (replicate_lane_names.index((replicate_name, lane_name)), replicate_name, lane_name)
+        js += """<tr class="google-visualization-table-tr-even"><td class="google-visualization-table-td"><div id="read_distribution_%s_0_div"></div></td><td class="google-visualization-table-td">%s</td><td class="google-visualization-table-td">%s</td>""" % (replicate_lane_names.index((replicate_name, lane_name)), replicate_name, lane_name)
         # Fill in the cells for the individual read distributions
         for start in starts[1:]:
-            js += '<td>'
+            js += '<td class="google-visualization-table-td">'
             js += """<div id="read_distribution_%s_%s_div"></div>""" % (replicate_lane_names.index((replicate_name, lane_name)), starts.index(start))
             js += '</td>'
         js += '</tr>'
