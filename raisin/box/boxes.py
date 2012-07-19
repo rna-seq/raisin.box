@@ -596,7 +596,7 @@ chart.draw(view, {width: 100, height: 100, showAxisLines: false,  showValueLabel
     return box
 
 @augment((JSON, PICKLED))
-def run_read_distribution(self, box):
+def replicate_read_distribution(self, box):
     """
     The sparklines need to be inserted into the HTML table cells of the read distribution table.
     
@@ -642,7 +642,7 @@ def run_read_distribution(self, box):
 
     # Dynamically fill in the table structure in the read distribution HTML div element
     js = ""
-    js += """document.getElementById('read_distribution_div').innerHTML='"""
+    js += """document.getElementById('replicate_read_distribution_div').innerHTML='"""
     js += """<table class="minicharttable"><tr><td>Distribution</td><td>Lane ID</td>"""
     
     # Ignore the first start (0), which is reserved for the overall read distribution
