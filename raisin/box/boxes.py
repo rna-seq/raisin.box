@@ -596,7 +596,7 @@ def _read_distribution(self, box, level):
     # Dynamically fill in the table structure in the read distribution HTML div element
     js = ""
     js += """document.getElementById('%s_read_distribution_div').innerHTML='""" % level
-    js += """<table class="google-visualization-table-table"><tr class="google-visualization-table-tr-head"><td class="google-visualization-table-th">Distribution</td><td class="google-visualization-table-th">Replicate ID</td><td class="google-visualization-table-th">Lane ID</td>"""
+    js += """<table class="google-visualization-table-table"><tr class="google-visualization-table-tr-head"><td class="google-visualization-table-th">Distribution</td><td class="google-visualization-table-th">Replicate / Lane</td>"""
     
     # Ignore the first start (0), which is reserved for the overall read distribution
     for start in starts[1:]:
@@ -604,7 +604,7 @@ def _read_distribution(self, box, level):
     js +=     """</tr>"""
     # Fill in the rows for each labe        
     for replicate_name, lane_name in replicate_lane_names:
-        js += """<tr class="google-visualization-table-tr-even"><td class="google-visualization-table-td"><div id="read_distribution_%s_0_div"></div></td><td class="google-visualization-table-td">%s</td><td class="google-visualization-table-td">%s</td>""" % (replicate_lane_names.index((replicate_name, lane_name)), replicate_name, lane_name)
+        js += """<tr class="google-visualization-table-tr-even"><td class="google-visualization-table-td"><div id="read_distribution_%s_0_div"></div></td><td class="google-visualization-table-td">%s / %s</td>""" % (replicate_lane_names.index((replicate_name, lane_name)), replicate_name, lane_name)
         # Fill in the cells for the individual read distributions
         for start in starts[1:]:
             js += '<td class="google-visualization-table-td">'
