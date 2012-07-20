@@ -1,0 +1,9 @@
+1.2 (2012-07-20)
+================
+
+- Add read distribution chart to mapping
+
+1.1 (2012-03-28)
+================
+
+- Initial release
