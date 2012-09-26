@@ -41,4 +41,4 @@ BOXES = ConfigObj(os.path.join(os.path.dirname(__file__), "boxes.ini"))
 # All boxes are registered here
 RESOURCES_REGISTRY = []
 
-import boxes
+from raisin.box import boxes
