@@ -4,12 +4,13 @@ import csv
 # JSON is needed for Google visualization charts
 # It is not needed for resources that are just Python dictionaries
 from raisin.box.config import JSON
-# PICKLED is only needed when the box needs to work on the Python representation
-# in order to augment the box information.
+# PICKLED is only needed when the box needs to work on the Python
+# representation in order to augment the box information.
 # It is not needed when the JSON resource can be passed through as is
 from raisin.box.config import PICKLED
 from raisin.box import RESOURCES_REGISTRY
 from gvizapi import gviz_api
+
 
 # pylint: disable-msg=R0903
 class augment(object):
@@ -20,7 +21,8 @@ class augment(object):
         @augment((JSON,PICKLED))
         def project_meta(context, box):
 
-    The list of formats needed in the method are given as the formats parameter.
+    The list of formats needed in the method are given as the formats
+    parameter.
 
     * JSON is always needed when a resource is fetched from a remote server
 
@@ -255,17 +257,23 @@ def _sample_info(context, box):
     box['description'] = []
     if lines:
         if lines['Species']:
-            box['description'].append({'Species': lines['Species']})
+            info = {'Species': lines['Species']}
+            box['description'].append(info)
         if lines['Cell Type']:
-            box['description'].append({'Cell Type': lines['Cell Type']})
+            info = {'Cell Type': lines['Cell Type']}
+            box['description'].append(info)
         if lines['RNA Type']:
-            box['description'].append({'RNA Type': lines['RNA Type']})
+            info = {'RNA Type': lines['RNA Type']}
+            box['description'].append(info)
         if lines['Localization']:
-            box['description'].append({'Localization': lines['Localization']})
+            info = {'Localization': lines['Localization']}
+            box['description'].append(info)
         if lines['Bio Replicate']:
-            box['description'].append({'Bio Replicate': lines['Bio Replicate']})
+            info = {'Bio Replicate': lines['Bio Replicate']}
+            box['description'].append(info)
         if lines['Date']:
-            box['description'].append({'Date': lines['Date']})
+            info = {'Date': lines['Date']}
+            box['description'].append(info)
     box['description_type'] = 'properties'
     return box
 
@@ -510,6 +518,7 @@ def lane_ambiguous_bases_per_position(context, box):
     """Augment resource."""
     return _position(context, box)
 
+
 @augment((JSON, PICKLED))
 def experiment_read_distribution(self, box):
     """Experiment level read distribution"""
@@ -585,12 +594,12 @@ def _read_distribution(self, box, level):
     # Calculate the ranges given the starts
     ranges = {}
     for pos in range(0, len(starts)):
-        if pos == len(starts)-1:
+        if pos == len(starts) - 1:
             # The last range goes to infinity
             ranges[starts[pos]] = (str(starts[pos]), 'n')
         else:
             # The range goes until just before the start of the next range
-            ranges[starts[pos]] = (str(starts[pos]), str(starts[pos+1] - 1))
+            ranges[starts[pos]] = (str(starts[pos]), str(starts[pos + 1] - 1))
 
     # Dynamically fill in the table structure in the read distribution HTML
     # div element
@@ -602,7 +611,7 @@ def _read_distribution(self, box, level):
     # Ignore the first start (0), which is reserved for the overall read distribution
     for start in starts[1:]:
         js += """<td class="google-visualization-table-th">%s - %s</td>""" % (ranges[start][0], ranges[start][1])
-    js +=     """</tr>"""
+    js += """</tr>"""
     # Fill in the rows for each labe
     for replicate_name, lane_name in replicate_lane_names:
         js += """<tr class="google-visualization-table-tr-even"><td class="google-visualization-table-td"><div id="read_distribution_%s_0_div"></div></td><td class="google-visualization-table-td">%s / %s</td>""" % (replicate_lane_names.index((replicate_name, lane_name)), replicate_name, lane_name)
