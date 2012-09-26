@@ -1,45 +1,16 @@
-= raisin.box =
+==========
+raisin.box
+==========
 
-This package contains the definition of the boxes that appear on the pages rendered by
-repoze.bfg.
+The raisin.box package is a part of Raisin, the web application used for
+publishing the summary statistics of Grape, a pipeline used for processing and
+analyzing RNA-Seq data.
 
-    boxes.ini
+.. image:: https://secure.travis-ci.org/rna-seq/raisin.box.png?branch=master
+   :alt: Build Status
+   :target: https://secure.travis-ci.org/rna-seq/raisin.box
 
-It also contains information from where to fetch the resources contained in the boxes:
+Links:
 
-    resources.ini
-
-While most boxes should render without any changes, some boxes require special handling.
-All boxes have a method for augmenting their configuration dynamically in
-
-    boxes.py
-
-An example of augmenting just the basics, like the title, description and description type:
-
-    @augment((PICKLED,))
-    def project_about(self, box):
-        box['title'] = 'About'
-        box['description'] = box[PICKLED]['description']       
-        box['description_type'] = 'infotext'
-        return box       
-
-An example of correcting the height of a chart depending on the length of the table data:
-
-    @augment((JSON, PICKLED))
-    def read_quality(self, box):
-        # Need to extract some infos from the table, so load the pickled dictionary
-        table = box[PICKLED]
-        height = max(len(table['table_data']) * 60, 160)
-        box['chartoptions']['height'] = str(height)
-
-= The augment decorator =
-
-The augment decorator defines what resource representations should be fetched.
-
-* JSON
-
-    * Needed for charts that rely on Google visualization tools
-
-* PICKLED
-
-    * Needed if your method needs access to the Python dictionary representation of a resource
+- The full documentation is located at : http://raisinbox.readthedocs.org/en/latest/
+- The repository and issue tracker are at GitHub : https://github.com/rna-seq/raisin.box/issues
