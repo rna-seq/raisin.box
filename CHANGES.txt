@@ -1,3 +1,9 @@
+1.4 (2012-09-26)
+================
+
+- Fix layout problems in charts on mapping tab. The height setting had cut
+  off the x-axis legend.
+
 1.3 (2012-07-25)
 ================
 
