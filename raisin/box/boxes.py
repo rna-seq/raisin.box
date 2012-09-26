@@ -3,15 +3,15 @@
 import csv
 # JSON is needed for Google visualization charts
 # It is not needed for resources that are just Python dictionaries
-from config import JSON
+from raisin.box.config import JSON
 # PICKLED is only needed when the box needs to work on the Python representation
 # in order to augment the box information.
 # It is not needed when the JSON resource can be passed through as is
-from config import PICKLED
+from raisin.box.config import PICKLED
 from raisin.box import RESOURCES_REGISTRY
 from gvizapi import gviz_api
 
-
+# pylint: disable-msg=R0903
 class augment(object):
     """This is a decorator that registers methods augmenting resources.
 
@@ -32,7 +32,6 @@ class augment(object):
     """
     # pylint: disable-msg=C0103
     # This class is used as a decorator, so allow lower case name
-
     def __init__(self, formats):
         """Store the formats that need to be fetched for the method"""
         self.formats = formats
@@ -70,7 +69,6 @@ def get_lines(box):
 # Sometimes not all parameters are used, which is not a problem
 
 # pylint: disable-msg=C0103
-# XXX method names are too long
 @augment((PICKLED,))
 def projects(context, box):
     """Augment resource."""
@@ -576,7 +574,8 @@ def _read_distribution(self, box, level):
     table = box[PICKLED]
 
     # Fetch the lane names from the table
-    replicate_lane_names = list(set([(item[0], item[1]) for item in table['table_data']]))
+    table_data_items = [(item[0], item[1]) for item in table['table_data']]
+    replicate_lane_names = list(set(table_data_items))
     replicate_lane_names.sort()
 
     # Fetch the starts from the table
@@ -593,8 +592,10 @@ def _read_distribution(self, box, level):
             # The range goes until just before the start of the next range
             ranges[starts[pos]] = (str(starts[pos]), str(starts[pos+1] - 1))
 
-    # Dynamically fill in the table structure in the read distribution HTML div element
+    # Dynamically fill in the table structure in the read distribution HTML
+    # div element
     js = ""
+    # pylint: disable-msg=C0301
     js += """document.getElementById('%s_read_distribution_div').innerHTML='""" % level
     js += """<table class="google-visualization-table-table"><tr class="google-visualization-table-tr-head"><td class="google-visualization-table-th">Distribution</td><td class="google-visualization-table-th">Replicate / Lane</td>"""
 
@@ -942,7 +943,6 @@ def _detected_genes(context, box):
 
 def _mapped_reads(context, box):
     """Augment resource."""
-    table = box[PICKLED]
     area = '{left:"20%", right:"20%", width:"60%"}'
     box['chartoptions']['chartArea'] = area
 
