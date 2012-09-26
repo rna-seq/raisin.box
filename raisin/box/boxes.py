@@ -943,9 +943,7 @@ def _detected_genes(context, box):
 def _mapped_reads(context, box):
     """Augment resource."""
     table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    area = '{left:"20%", right:"20%", top:"5%",width:"60%",height:"90%"}'
+    area = '{left:"20%", right:"20%", width:"60%"}'
     box['chartoptions']['chartArea'] = area
 
 
