@@ -625,11 +625,16 @@ view.setRows(data.getFilteredRows([{column: 0, value: '%s'}, {column: 1, value: 
 view.setColumns([4])
 var chart = new google.visualization.ImageSparkLine(document.getElementById('read_distribution_%s_%s_div'));
 chart.draw(view, {width: 100, height: 100, showAxisLines: false,  showValueLabels: false, labelPosition: 'none'});
-""" % (replicate_name,  # Filter on replicate in the data table
-   lane_name, # Filter on lane in the data table
-   start, # Filter on start in the data table
-   replicate_lane_names.index((replicate_name, lane_name)), # The index of the replicate and lane is used for the id of the target div
-   starts.index(start)) # The index of the range is also used for the id of the target div
+""" % (replicate_name,
+       # Filter on replicate in the data table
+       lane_name,
+       # Filter on lane in the data table
+       start,
+       # Filter on start in the data table
+       replicate_lane_names.index((replicate_name, lane_name)),
+       # The index of the replicate and lane is used for target div id
+       starts.index(start))
+       # The index of the range is also used for the target div id
 
     return box
 
