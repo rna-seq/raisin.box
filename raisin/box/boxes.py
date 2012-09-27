@@ -1059,7 +1059,7 @@ def golden(box, width):
 def font_size(box):
     """Use the golden ratio"""
     if int(box['chartoptions']['width']) == 900:
-        box['chartoptions']['fontSize'] = str(22)
+        box['chartoptions']['fontSize'] = str(20)
     else:
         box['chartoptions']['fontSize'] = str(14)
     
