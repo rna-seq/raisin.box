@@ -75,7 +75,7 @@ def get_lines(box):
 def projects(context, box):
     """Augment resource."""
     lines = get_lines(box)
-    box['title'] = ''
+    title(box)
     box['description'] = lines
     box['description_type'] = 'projectlist'
     return box
@@ -85,7 +85,7 @@ def projects(context, box):
 def project_about(context, box):
     """Augment resource."""
     lines = get_lines(box)
-    box['title'] = 'About'
+    title(box)
     box['description'] = lines.get('Project Description', '')
     box['description_type'] = 'infotext'
     return box
@@ -95,7 +95,7 @@ def project_about(context, box):
 def replicate_about(context, box):
     """Augment resource."""
     lines = get_lines(box)
-    box['title'] = 'About'
+    title(box)
     box['description'] = lines.get('Project Description', '')
     box['description_type'] = 'infotext'
     return box
@@ -105,7 +105,7 @@ def replicate_about(context, box):
 def project_meta(context, box):
     """Augment resource."""
     lines = get_lines(box)
-    box['title'] = ''
+    title(box)
     box['description'] = [{'Species': lines.get('Species', '')}]
     box['description_type'] = 'properties'
     return box
@@ -114,7 +114,7 @@ def project_meta(context, box):
 @augment((PICKLED,))
 def experiment_about(context, box):
     """Augment resource."""
-    box['title'] = 'About'
+    title(box)
     lines = get_lines(box)
     box['description'] = lines.get('Description', '')
     box['description_type'] = 'infotext'
@@ -125,7 +125,7 @@ def experiment_about(context, box):
 def experiments(context, box):
     """Augment resource."""
     lines = get_lines(box)
-    box['title'] = ''
+    title(box)
     box['description'] = lines
     box['description_type'] = 'linklist'
     return box
@@ -152,6 +152,7 @@ def project_experimentstable(context, box):
     # >>> str(range(2, 4))[1:-1]
     # '2, 3'
     box['javascript'] = javascript
+    title(box)
     return box
 
 
@@ -222,31 +223,35 @@ def project_downloads(context, box):
    view.setColumns([1,2,{calc:makeDownloadLink, type:'string', label:'.csv File Download Link'}]);
     """
     box['javascript'] = javascript
+    title(box)
     return box
 
 
 @augment((JSON,))
 def rnadashboard(context, box):
     """Augment resource."""
-    box['title'] = ''
+    title(box)
     return box
 
 
 @augment((JSON,))
 def rnadashboard_results(context, box):
     """Augment resource."""
+    title(box)
     return box
 
 
 @augment((PICKLED,))
 def experiment_sample_info(context, box):
     """Augment resource."""
+    title(box)
     return _sample_info(context, box)
 
 
 @augment((PICKLED,))
 def replicate_sample_info(context, box):
     """Augment resource."""
+    title(box)
     return _sample_info(context, box)
 
 
@@ -281,18 +286,24 @@ def _sample_info(context, box):
 @augment((PICKLED,))
 def experiment_mapping_info(context, box):
     """Augment resource."""
+    box['title'] = "Mapping Information"
+    title(box)
     return _mapping_info(context, box)
 
 
 @augment((PICKLED,))
 def replicate_mapping_info(context, box):
     """Augment resource."""
+    box['title'] = "Mapping Information"
+    title(box)
     return _mapping_info(context, box)
 
 
 @augment((PICKLED,))
 def lane_mapping_info(context, box):
     """Augment resource."""
+    box['title'] = "Mapping Information"
+    title(box)
     return _mapping_info(context, box)
 
 
@@ -324,73 +335,84 @@ def _mapping_info(context, box):
 @augment((JSON,))
 def experiment_read_summary(context, box):
     """Augment resource."""
-    pass
-
+    title(box)
+    return box
 
 @augment((JSON,))
 def replicate_read_summary(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def lane_read_summary(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def experiment_mapping_summary(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def replicate_mapping_summary(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def lane_mapping_summary(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def experiment_expression_summary(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def replicate_expression_summary(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def lane_expression_summary(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def experiment_splicing_summary(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def replicate_splicing_summary(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def lane_splicing_summary(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON, PICKLED))
@@ -432,37 +454,43 @@ def replicate_average_percentage_of_unique_reads(context, box):
 @augment((JSON,))
 def experiment_total_ambiguous_and_unambiguous_reads(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def replicate_total_ambiguous_and_unambiguous_reads(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def lane_total_ambiguous_and_unambiguous_reads(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def experiment_average_and_average_unique_reads(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def replicate_average_and_average_unique_reads(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def lane_average_and_average_unique_reads(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON, PICKLED))
@@ -633,7 +661,7 @@ var view = new google.visualization.DataView(data);
 view.setRows(data.getFilteredRows([{column: 0, value: '%s'}, {column: 1, value: '%s'}, {column: 2, value: %s}]))
 view.setColumns([4])
 var chart = new google.visualization.ImageSparkLine(document.getElementById('read_distribution_%s_%s_div'));
-chart.draw(view, {width: 100, height: 100, showAxisLines: false,  showValueLabels: false, labelPosition: 'none'});
+chart.draw(view, {width: 100, height: 62, showAxisLines: false,  showValueLabels: false, labelPosition: 'none'});
 """ % (replicate_name,
        # Filter on replicate in the data table
        lane_name,
@@ -645,6 +673,7 @@ chart.draw(view, {width: 100, height: 100, showAxisLines: false,  showValueLabel
        starts.index(start))
        # The index of the range is also used for the target div id
 
+    title(box)
     return box
 
 
@@ -759,72 +788,84 @@ def lane_gene_expression_profile(context, box):
 @augment((JSON,))
 def experiment_gene_expression_levels(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def replicate_gene_expression_levels(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def lane_gene_expression_levels(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON, PICKLED))
 def experiment_top_genes(context, box):
     """Augment resource."""
+    title(box)
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def replicate_top_genes(context, box):
     """Augment resource."""
+    title(box)
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_top_genes(context, box):
     """Augment resource."""
+    title(box)
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def experiment_top_transcripts(context, box):
     """Augment resource."""
+    title(box)
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def replicate_top_transcripts(context, box):
     """Augment resource."""
+    title(box)
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_top_transcripts(context, box):
     """Augment resource."""
+    title(box)
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def experiment_top_exons(context, box):
     """Augment resource."""
+    title(box)
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def replicate_top_exons(context, box):
     """Augment resource."""
+    title(box)
     return _thousands_formatter(context, box)
 
 
 @augment((JSON, PICKLED))
 def lane_top_exons(context, box):
     """Augment resource."""
+    title(box)
     return _thousands_formatter(context, box)
 
 
@@ -849,87 +890,105 @@ def lane_exon_inclusion_profile(context, box):
 @augment((JSON,))
 def experiment_reads_supporting_exon_inclusions(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def replicate_reads_supporting_exon_inclusions(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def lane_reads_supporting_exon_inclusions(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def experiment_novel_junctions_from_annotated_exons(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def replicate_novel_junctions_from_annotated_exons(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def lane_novel_junctions_from_annotated_exons(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def experiment_novel_junctions_from_unannotated_exons(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def replicate_novel_junctions_from_unannotated_exons(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 @augment((JSON,))
 def lane_novel_junctions_from_unannotated_exons(context, box):
     """Augment resource."""
-    pass
+    title(box)
+    return box
 
 
 def _exon_inclusion_profile(context, box):
     """Augment resource."""
-    box['chartoptions']['vAxis'] = "{logScale:true}"
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
-    area = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
-    box['chartoptions']['chartArea'] = area
+    golden(box, 900)
+    font_size(box)
+    title(box)
+    top_legend(box)
+    box['chartoptions']['chartArea'] = "{left:'20%', right:'10%', width:'70%', height:'62%'}"
+    option = "{minValue:'0'}"
+    box['chartoptions']['hAxis'] = option
+    option = "{minValue:'0', logScale:true}"
+    box['chartoptions']['vAxis'] = option
     return box
 
 
 def _gene_expression_profile(context, box):
     """Augment resource."""
-    box['chartoptions']['vAxis'] = "{logScale:true}"
-    box['chartoptions']['hAxis'] = "{logScale:true}"
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
-    area = '''{left:"10%", right:"10%",width:"60%",top:20,height:540}'''
+    area = '''{left:"10%",right:"30%",width:"60%"}'''
     box['chartoptions']['chartArea'] = area
+    golden(box, 900)
+    font_size(box)
+    title(box)
+    top_legend(box)
+    box['chartoptions']['chartArea'] = "{left:'20%', right:'10%', width:'70%', height:'62%'}"
+    option = "{minValue:'0', logScale:true}"
+    box['chartoptions']['hAxis'] = option
+    option = "{minValue:'0', logScale:true}"
+    box['chartoptions']['vAxis'] = option
     return box
 
 
 def _custom_spaced_chart(context, box):
     """Augment resource."""
     table = box[PICKLED]
-    height = max(len(table['table_data']) * 40, 100)
-    box['chartoptions']['height'] = str(height)
-    area = '''{left:"20%", right:"20%", top:"5%",width:"60%",height:"60%"}'''
-    box['chartoptions']['chartArea'] = area
-    box['chartoptions']['hAxis'] = '''{minValue:"0"}'''
-
+    box['chartoptions']['hAxis'] = '''{minValue:'0', maxValue:'100'}'''
+    golden(box, 900)
+    font_size(box)
+    title(box)
+    no_legend(box)
+    box['chartoptions']['chartArea'] = "{left:'20%', right:'10%', width:'70%', height:'62%'}"
 
 def _thousands_formatter(context, box):
     """Augment resource."""
@@ -952,24 +1011,66 @@ def _detected_genes(context, box):
     for index in range(1, len(table['table_description'])):
         formatter = """thousandsformatter.format(data, %s);\n""" % index
         box['javascript'] += formatter
+    title(box)
     return box
 
 
 def _mapped_reads(context, box):
     """Augment resource."""
-    area = '{left:"20%", right:"20%", width:"60%"}'
-    box['chartoptions']['chartArea'] = area
-
+    option = '{minValue:0}'
+    box['chartoptions']['hAxis'] = option
+    golden(box, 900)
+    font_size(box)
+    title(box)
+    box['chartoptions']['chartArea'] = "{left:'20%', right:'20%', width:'60%', height:'62%'}"
+    option = "{minValue:'0'}"
+    box['chartoptions']['hAxis'] = option
+    option = "{minValue:'0'}"
+    box['chartoptions']['vAxis'] = option
 
 def _percentage_of_reads_with_ambiguous_bases(context, box):
     """Augment resource."""
     table = box[PICKLED]
     height = max(len(table['table_data']) * 60, 160)
     box['chartoptions']['height'] = str(height)
+    title(box)
+    return box
 
 
 def _position(context, box):
     """Augment resource."""
-    box['chartoptions']['vAxis'] = "{logScale:true}"
-    box['chartoptions']['width'] = 900
-    box['chartoptions']['height'] = 640
+    golden(box, 900)
+    font_size(box)
+    title(box)
+    top_legend(box)
+    box['chartoptions']['chartArea'] = "{left:'20%', right:'10%', width:'70%', height:'62%'}"
+    option = "{minValue:'0'}"
+    box['chartoptions']['hAxis'] = option
+    option = "{minValue:'0', logScale:true}"
+    box['chartoptions']['vAxis'] = option
+
+def golden(box, width):
+    """Use the golden ratio"""
+    box['chartoptions']['width'] = str(width)
+    GOLDEN = 1.61803399
+    height = float(width) / GOLDEN
+    box['chartoptions']['height'] = str(int(height))
+
+def font_size(box):
+    """Use the golden ratio"""
+    if int(box['chartoptions']['width']) == 900:
+        box['chartoptions']['fontSize'] = str(22)
+    else:
+        box['chartoptions']['fontSize'] = str(14)
+    
+def title(box):
+    if not 'chartoptions' in box:
+        box['chartoptions'] = {}
+        print "oops", box
+    box['chartoptions']['title'] = box.get('title', '')
+    
+def no_legend(box):
+    box['chartoptions']['legend'] = "{position:'none'}"
+
+def top_legend(box):
+    box['chartoptions']['legend'] = "{position:'top'}"
