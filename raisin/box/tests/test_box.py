@@ -12,9 +12,10 @@ class BoxTest(unittest.TestCase):
         unittest.TestCase.tearDown(self)
 
     def test_thousands_formatter(self):
-        box = {PICKLED: {'table_description': [['Header 1', 'string'],
-                                               ['Header 2', 'number']]},
-                        'javascript': ''}
+        description = [['Header 1', 'string'],
+                       ['Header 2', 'number']]
+        table_description = {'table_description': description}
+        box = {PICKLED: table_description, 'javascript': ''}
         boxes._thousands_formatter(None, box)
         javascript = 'thousandsformatter.format(data, 1);\n'
         self.failUnless(box['javascript'] == javascript)
