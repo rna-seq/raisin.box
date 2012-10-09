@@ -1,5 +1,11 @@
-1.4 (2012-09-26)
+1.4 (2012-10-09)
 ================
+
+- Change font size on charts
+
+- Add internal chart titles
+
+- Reduce some charts to width 600
 
 - Fix layout problems in charts on mapping tab. The height setting had cut
   off the x-axis legend.
