@@ -12,7 +12,7 @@ from raisin.box import RESOURCES_REGISTRY
 from gvizapi import gviz_api
 
 
-# pylint: disable-msg=R0903
+# pylint: disable=R0903
 class augment(object):
     """This is a decorator that registers methods augmenting resources.
 
@@ -32,7 +32,7 @@ class augment(object):
 
     box['description'] = [{'Species': box[PICKLED]['species']}]
     """
-    # pylint: disable-msg=C0103
+    # pylint: disable=C0103
     # This class is used as a decorator, so allow lower case name
     def __init__(self, formats):
         """Store the formats that need to be fetched for the method"""
@@ -67,10 +67,10 @@ def get_lines(box):
     return lines
 
 
-# pylint: disable-msg=W0613
+# pylint: disable=W0613
 # Sometimes not all parameters are used, which is not a problem
 
-# pylint: disable-msg=C0103
+# pylint: disable=C0103
 @augment((PICKLED,))
 def projects(context, box):
     """Augment resource."""
@@ -633,7 +633,7 @@ def _read_distribution(self, box, level):
     # Dynamically fill in the table structure in the read distribution HTML
     # div element
     js = ""
-    # pylint: disable-msg=C0301
+    # pylint: disable=C0301
     js += """document.getElementById('%s_read_distribution_div').innerHTML='""" % level
     js += """<table class="google-visualization-table-table"><tr class="google-visualization-table-tr-head"><td class="google-visualization-table-th">Distribution</td><td class="google-visualization-table-th">Replicate / Lane</td>"""
 
@@ -986,7 +986,6 @@ def _gene_expression_profile(context, box):
 
 def _custom_spaced_chart(context, box):
     """Augment resource."""
-    table = box[PICKLED]
     box['chartoptions']['hAxis'] = '''{minValue:'0', maxValue:'100'}'''
     golden(box, 900)
     font_size(box)
@@ -1076,15 +1075,17 @@ def font_size(box):
 
 
 def title(box):
+    """set title safely"""
     if not 'chartoptions' in box:
         box['chartoptions'] = {}
-        print "oops", box
     box['chartoptions']['title'] = box.get('title', '')
 
 
 def no_legend(box):
+    """Make chart option settings to make the legend disappear"""
     box['chartoptions']['legend'] = "{position:'none'}"
 
 
 def top_legend(box):
+    """Make chart option settings to make the legend appear on top"""
     box['chartoptions']['legend'] = "{position:'top'}"
