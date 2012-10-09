@@ -338,6 +338,7 @@ def experiment_read_summary(context, box):
     title(box)
     return box
 
+
 @augment((JSON,))
 def replicate_read_summary(context, box):
     """Augment resource."""
@@ -652,7 +653,8 @@ def _read_distribution(self, box, level):
     js += """</table>'"""
     box['javascript'] = js
 
-    # Create the JavaScript code for the div tags that were just dynamically added
+    # Create the JavaScript code for the div tags that were just dynamically
+    # added
     for replicate_name, lane_name in replicate_lane_names:
         for start in starts:
             # Add a new view for each range of each lane
@@ -956,7 +958,8 @@ def _exon_inclusion_profile(context, box):
     font_size(box)
     title(box)
     top_legend(box)
-    box['chartoptions']['chartArea'] = "{left:'20%', right:'10%', width:'70%', height:'62%'}"
+    option = "{left:'20%', right:'10%', width:'70%', height:'62%'}"
+    box['chartoptions']['chartArea'] = option
     option = "{minValue:'0'}"
     box['chartoptions']['hAxis'] = option
     option = "{minValue:'0', logScale:true}"
@@ -972,7 +975,8 @@ def _gene_expression_profile(context, box):
     font_size(box)
     title(box)
     top_legend(box)
-    box['chartoptions']['chartArea'] = "{left:'20%', right:'10%', width:'70%', height:'62%'}"
+    option = "{left:'20%', right:'10%', width:'70%', height:'62%'}"
+    box['chartoptions']['chartArea'] = option
     option = "{minValue:'0', logScale:true}"
     box['chartoptions']['hAxis'] = option
     option = "{minValue:'0', logScale:true}"
@@ -988,7 +992,9 @@ def _custom_spaced_chart(context, box):
     font_size(box)
     title(box)
     no_legend(box)
-    box['chartoptions']['chartArea'] = "{left:'20%', right:'10%', width:'70%', height:'62%'}"
+    option = "{left:'20%', right:'10%', width:'70%', height:'62%'}"
+    box['chartoptions']['chartArea'] = option
+
 
 def _thousands_formatter(context, box):
     """Augment resource."""
@@ -1022,11 +1028,13 @@ def _mapped_reads(context, box):
     golden(box, 900)
     font_size(box)
     title(box)
-    box['chartoptions']['chartArea'] = "{left:'20%', right:'20%', width:'60%', height:'62%'}"
+    option = "{left:'20%', right:'20%', width:'60%', height:'62%'}"
+    box['chartoptions']['chartArea'] = option
     option = "{minValue:'0'}"
     box['chartoptions']['hAxis'] = option
     option = "{minValue:'0'}"
     box['chartoptions']['vAxis'] = option
+
 
 def _percentage_of_reads_with_ambiguous_bases(context, box):
     """Augment resource."""
@@ -1043,11 +1051,13 @@ def _position(context, box):
     font_size(box)
     title(box)
     top_legend(box)
-    box['chartoptions']['chartArea'] = "{left:'20%', right:'10%', width:'70%', height:'62%'}"
+    option = "{left:'20%', right:'10%', width:'70%', height:'62%'}"
+    box['chartoptions']['chartArea'] = option
     option = "{minValue:'0'}"
     box['chartoptions']['hAxis'] = option
     option = "{minValue:'0', logScale:true}"
     box['chartoptions']['vAxis'] = option
+
 
 def golden(box, width):
     """Use the golden ratio"""
@@ -1056,21 +1066,25 @@ def golden(box, width):
     height = float(width) / GOLDEN
     box['chartoptions']['height'] = str(int(height))
 
+
 def font_size(box):
     """Use the golden ratio"""
     if int(box['chartoptions']['width']) == 900:
         box['chartoptions']['fontSize'] = str(20)
     else:
         box['chartoptions']['fontSize'] = str(14)
-    
+
+
 def title(box):
     if not 'chartoptions' in box:
         box['chartoptions'] = {}
         print "oops", box
     box['chartoptions']['title'] = box.get('title', '')
-    
+
+
 def no_legend(box):
     box['chartoptions']['legend'] = "{position:'none'}"
+
 
 def top_legend(box):
     box['chartoptions']['legend'] = "{position:'top'}"
